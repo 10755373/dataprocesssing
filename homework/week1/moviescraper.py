@@ -40,11 +40,6 @@ def extract_movies(dom):
         # find class movie title
         title_data = title_info.find("h3", {"class": "lister-item-header"})
         title.append(title_data.find("a").get_text(strip=True))
-        # title_data = title_info.h3.a.get_text(strip=True)
-        # title.append(title_data)
-        # title_data = title_info.find("h3", {"class": "lister-item-header"})
-        # # append title to list Title
-        # title.append(title_data.find("a").get_text(strip=True))
 
     for rating_info in total_info:
         # find section about rating
