@@ -16,15 +16,27 @@ END_YEAR = 2018
 # Global dictionary for the data
 data_dict = {str(key): [] for key in range(START_YEAR, END_YEAR)}
 
+with open(INPUT_CSV, newline="") as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        data_dict[row["Year"]].append(row["Rating"])
+
 for year in range(START_YEAR, END_YEAR):
-    years = data_dict[str(year)]
-    ratings = [float(rating) for rating in years]
-    average = ((sum(ratings)) / float(len(ratings)))
-    data_dict[str(year)] = average
+    list_ratings = data_dict[str(year)]
+    ratings = [float(rating) for rating in list_ratings]
+    average_rating = sum(ratings) / float(len(ratings))
+    data_dict[str(year)] = average_rating
 
 if __name__ == "__main__":
-    print(data_dict)
-    plt.xlabel('')
-    plt.ylabel('')
-    plt.title('')
-    
+    list_years = []
+    list_averages = []
+    for element in range(START_YEAR, END_YEAR):
+        list_years.append(element)
+        list_averages.append(data_dict[str(element)])
+    plt.xlabel('Year')
+    plt.ylabel('Average rating')
+    plt.title('Average rating between 2008 and 2018')
+    plt.plot(list_years, list_averages, linewidth=1.0)
+    plt.axis([2007, 2018, 7, 10])
+    plt.grid(True)
+    plt.show()
