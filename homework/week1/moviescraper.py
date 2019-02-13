@@ -6,6 +6,7 @@ This script scrapes IMDB and outputs a CSV file with highest rated movies.
 """
 
 import csv
+import re
 from requests import get
 from requests.exceptions import RequestException
 from contextlib import closing
@@ -39,7 +40,9 @@ def extract_movies(dom):
     for title_info in total_info:
         # find class movie title
         title_data = title_info.find("h3", {"class": "lister-item-header"})
+        # append title to list
         title.append(title_data.find("a").get_text(strip=True))
+
 
     for rating_info in total_info:
         # find section about rating
@@ -68,34 +71,20 @@ def extract_movies(dom):
         actors_data = actors_data.find_all("p")[2].find_all("a")
         all_actors = []
         for info in actors_data:
-            info = info.text.strip()
-            stars = re.search(r'(?<=Stars:\n)\w.*', line, re.DOTALL)
-            if stars:
-                # actors are split into a list which is appended to another list
-                actor = stars.group(0).split("\n")
-                all_actors.append(actors_data)
+            all_actors.append(info.text)
         actors.append(all_actors)
 
     for runtime_info in total_info:
-        # runtime_data = runtime_info.find("div", {class="lister-item-content"})
-        # time = runtime_data.get_text("p"[0], {class="text-muted"})
-        # runtime_data = runtime_info.find("span", {class="runtime"})
-        # runtime.append(time)
-        # runtime_data = runtime_info.h3.p.("span", {class="runtime"})
+        # get right setion
         runtime_data = runtime_info.find("span", {"class": "runtime"}).get_text(strip=True)[:3]
         if runtime_data == []:
             runtime.append("N/A")
         else:
-            runtime.append(runtime_data)
-        # runtime.append(runtime_info.find("span", {"class": "runtime"}).get_text(strip=True)[:3])
+            runtime.append(runtime_info.find("span", {"class": "runtime"}).get_text(strip=True)[:3])
 
-    # ADD YOUR CODE HERE TO EXTRACT THE ABOVE INFORMATION ABOUT THE
-    # HIGHEST RATED MOVIES
-    # NOTE: FOR THIS EXERCISE YOU ARE ALLOWED (BUT NOT REQUIRED) TO IGNORE
-    # UNICODE CHARACTERS AND SIMPLY LEAVE THEM OUT OF THE OUTPUT.
-
+    # create a dictionary and store all values in it
     movies = {'Title': title, 'Rating': rating, 'Year': release_year, 'Actors': actors, 'Runtime': runtime}
-    return(movies)   # REPLACE THIS LINE AS WELL IF APPROPRIATE
+    return(movies)
 
 def save_csv(outfile, movies):
     """
