@@ -92,6 +92,7 @@ def gdp_calculator(df):
     mode_gdp = gdp.mode()
     # standard deviation
     stdev_gdp = gdp.std()
+    return(gdp)
 
 def mortality_calculator(df):
     """
@@ -116,30 +117,11 @@ def mortality_calculator(df):
     thirdq_mortality = mortality.quantile(0.75)
     # Calculate Maximum
     max_mortality = mortality.max()
-
-def visualize(df):
-    """
-    Visualize all the data in a histogram (for gdp) as well as a boxplot (for mortality)
-    """
-    # Make a histogram
-    plt.hist(gdp)
-    plt.xlabel('Year')
-    plt.ylabel('Average rating')
-    plt.title('GDP ($ per capita) dollars')
-    plt.plot(list_years, list_averages, linewidth=1.0)
-    plt.axis([2007, 2018, 7, 10])
-    plt.grid(True)
-    plt.show()
-
-    # Make a boxplot
-    boxplot = plt.boxplot(mortality)
-    plt.show()
-
-
+    return(mortality)
 
 # def countries_unique(filename):
 #     """
-#     Get one of every country and remove Suriname (since it's an outlier)
+#     Get one of every country
 #     """
 #     unique_countries = []
 #     # gather all values from the column "Country"
@@ -151,10 +133,46 @@ def visualize(df):
 #         unique_countries.append(country)
 #     return(unique_countries)
 
+def visualize(df):
+    """
+    Visualize all the data in a histogram (for gdp) as well as a boxplot (for mortality)
+    """
+    # Make a histogram
+    plt.hist(gdp)
+    plt.xlabel('Number of countries')
+    plt.ylabel('GDP')
+    plt.title('GDP ($ per capita) dollars')
+    plt.show()
+
+    # Make a boxplot
+    boxplot = plt.boxplot(mortality)
+    plt.show()
+
+def make_json(details_list):
+    """
+    Iterate over list with all countries' details and append to a .json file
+    """
+    json_dict = {}
+    # Iterate over all the data
+    for row in details_list:
+        country_dict = {}
+        country = row["Country"]
+        country_dict["Region"] = row["Region"]
+        country_dict["Pop. Density (per sq. mi.)"] = row["Pop. Density (per sq. mi.)"]
+        country_dict["Infant mortality (per 1000 births)"] = row["Infant mortality (per 1000 births)"]
+        country_dict["GDP ($ per capita) dollars"] = row["GDP ($ per capita) dollars"]
+        # Append data to a dictionary
+        json_dict[country] = country_dict
+        # Create a .json file and append dictionary to it
+        with open("data.json", "w") as newfile:
+            json.dump(json_dict, newfile)
+
 if __name__ == "__main__":
     details_list = load_data(INPUT_CSV)
     save_csv("datainput.csv", details_list)
     df = use_data(EDITED_INPUT_CSV)
-    # countries_unique(EDITED_INPUT_CSV)
+    # countries_unique(df)
     gdp = gdp_calculator(df)
     mortality = mortality_calculator(df)
+    make_json(details_list)
+    visualize(df)
