@@ -25,6 +25,7 @@ def load_data(filename):
         reader = csv.DictReader(file)
         for row in reader:
             details_dict = {}
+            # Clean and preprocess all the data we need
             for value in ["Country", "Region", "Pop. Density (per sq. mi.)", "Infant mortality (per 1000 births)", "GDP ($ per capita) dollars"]:
                 if row[value] == "unknown":
                     population = row["Population"]
@@ -32,8 +33,6 @@ def load_data(filename):
                     area = row["Area (sq. mi.)"]
                     areafl = area.replace(",", ".")
                     density = float(populationfl) / float(areafl)
-                    # density_rounded = float(density)
-                    # details_dict[value] = density_rounded
                     details_dict[value] = float(density)
                 elif row[value]:
                         if type(row[value]) is str:
@@ -99,7 +98,7 @@ def gdp_calculator(df):
     mode_gdp = int(cleaned_gdp.mode())
     # Calculate the standard deviation
     stdev_gdp = cleaned_gdp.std()
-    print("The median is {}, the mean is {}, the mode is {} and the standard deviation is {}".format(median_gdp, mean_gdp, mode_gdp, stdev_gdp))
+    print("Regarding the gdp, the median is {}, the mean is {}, the mode is {} and the standard deviation is {}".format(median_gdp, mean_gdp, mode_gdp, stdev_gdp))
     return(cleaned_gdp)
 
 def mortality_calculator(df):
@@ -126,7 +125,7 @@ def mortality_calculator(df):
     # Calculate Maximum
     max_mortality = mortality_cleaned.max()
     # print the message with all the requested info
-    print("The minimum is {}, the first quartile is {}, the median is {}, the third quartile is {} and the maximum is {}".format(min_mortality, firstq_mortality,
+    print("Regarding the mortality rate, the minimum is {}, the first quartile is {}, the median is {}, the third quartile is {} and the maximum is {}".format(min_mortality, firstq_mortality,
     median_mortality, thirdq_mortality, max_mortality))
     return(mortality_cleaned)
 
@@ -135,8 +134,7 @@ def visualize(df):
     Visualize all the data in a histogram (for gdp) as well as a boxplot (for mortality)
     """
     # Make a histogram
-    width = [2]
-    plt.hist(gdp_calculator(df), width=width, bins=225)
+    plt.hist(gdp_calculator(df), bins=225)
     plt.xlabel('GDP')
     plt.ylabel('Number of countries')
     plt.title('GDP ($ per capita) dollars')
