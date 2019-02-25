@@ -1,0 +1,106 @@
+<!-- Rinus van Grunsven; 10755373; Analyse van de etmaalgemiddelde relatieve vochtigheid (in procenten) in De Bilt -->
+
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>Rinus van Grunsven; 10755373; Etmaalgemiddelde relatieve vochtigheid (in procenten) van 01-01-2018 t/m 01-01-2019</title>
+        </head>
+          <body>
+
+            <h1>My First Heading</h1>
+            <p>My first paragraph.</p>
+            <hr>
+            <h2>Inhoud</h2>
+            <!-- <script>
+              var fileName = "data_output.json";
+              var txtFile = new XMLHttpRequest();
+              txtFile.onreadystatechange = function() {
+                  if (txtFile.readyState === 4 && txtFile.status == 200) {
+                      var jsondata = (JSON.parse(txtFile.responseText));
+                      var details = (data.jsondata);
+                      datum = []
+                      min_nsl = []
+                      details.forEach(function(element) {console.log(element);});
+                      details_splitted = details.split()
+                      datum.push(details_splitted[1])
+                      min_nsl.push(details_splitted[3])
+                  }
+              }
+              txtFile.open("GET", fileName);
+              txtFile.send();
+              // for(var i = 0, size = list.length; i < size; i++){var item = data_list[i]; if(matchesLabel(item)){
+              // someFunction(item);}}
+            </script> -->
+            <script>
+              var fileName = "KNMI_20190101.json";
+              var txtFile = new XMLHttpRequest();
+              txtFile.onreadystatechange = function() {
+                  if (txtFile.readyState === 4 && txtFile.status == 200) {
+                      console.log(JSON.parse(txtFile.responseText));
+                      var info = JSON.parse(txtFile.responseText);
+                      // var info = (details.data)
+                      // console.log(info)
+                      datum = []
+                      lucht_v = []
+                      info.forEach(function(element) {
+                      datum.push(parseInt(element[1]))
+                      lucht_v.push(parseInt(element[3]))
+                      });
+                      console.log(datum)
+                      console.log(lucht_v)
+                      // Transform datum to the right format
+                      var date = new Date("January 1, 2018 00:00:00");
+                      console.log(date.getTime());
+
+                      // calculate domain (datum) and range (min_nsl)
+                      domain = []
+                      var domain_min = Math.min(datum)
+                      domain.push(domain_min)
+                      var domain_max = Math.max(datum)
+                      domain.push(domain_max)
+                      range = []
+                      var range_min = Math.min(lucht_v)
+                      range.push(range_min)
+                      var range_max = Math.max(lucht_v)
+                      range.push(range_max)
+
+                      // use fuction createTransform
+                      var line = createTransform(domain, range)
+
+
+
+                      function createTransform(domain, range){
+                    	// domain is a two-element array of the data bounds [domain_min, domain_max]
+                    	// range is a two-element array of the screen bounds [range_min, range_max]
+                    	// this gives you two equations to solve:
+                    	// range_min = alpha * domain_min + beta
+                    	// range_max = alpha * domain_max + beta
+                     		// a solution would be:
+
+                        var domain_min = domain[0]
+                        var domain_max = domain[1]
+                        var range_min = range[0]
+                        var range_max = range[1]
+
+                        // formulas to calculate the alpha and the beta
+                       	var alpha = (range_max - range_min) / (domain_max - domain_min)
+                        var beta = range_max - alpha * domain_max
+
+                        // returns the function for the linear transformation (y= a * x + b)
+                        return function(x){
+                          return alpha * x + beta;
+                        }
+                    }
+                  }
+              }
+              txtFile.open("GET", fileName);
+              txtFile.send();
+            </script>
+            <h3>deel 2</h3>
+            <p> deel 2 </p>
+
+            <script>console.log("Hello world!");</script>
+            <p>Take a look at <a href="KNMI_20190101.json" target="_blank">KNMI_20190101.json</a></p>
+            <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;"></canvas>
+    </body>
+  </html>
