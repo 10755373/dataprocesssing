@@ -6,11 +6,11 @@
       <title>Rinus van Grunsven; 10755373; Etmaalgemiddelde relatieve vochtigheid (in procenten) van 01-01-2018 t/m 01-01-2019</title>
         </head>
           <body>
-
             <h1>My First Heading</h1>
             <p>My first paragraph.</p>
             <hr>
             <h2>Inhoud</h2>
+            <canvas id="graph" width="300" height="200"></canvas>
             <script>
               var fileName = "KNMI_20190101.json";
               var txtFile = new XMLHttpRequest();
@@ -23,10 +23,12 @@
                       console.log(values)
                       values.forEach(function(d){dag.push(d.Datum);
                       });
-                      values.forEach(function(d){lucht_v.push(d.Luchtvochtigheid);
+                      values.forEach(function(d){lucht_v.push(Number(d.Luchtvochtigheid, 10));
                       });
                       console.log(dag);
                       console.log(lucht_v);
+                      console.log(typeof(dag));
+                      console.log(typeof(lucht_v));
 
                       // Transform datum to the right format
                       var dag = new Date("January 1, 2018 00:00:00");
@@ -43,6 +45,25 @@
                       range.push(range_min)
                       var range_max = Math.max(lucht_v)
                       range.push(range_max)
+                      console.log(domain);
+                      console.log(range);
+
+                      // Initialize the graph
+                      var graph_id = document.getElementById("graph");
+                      var figure = graph_id.getContext('2d');
+
+                      // Determine the lay-out
+                      figure.lineWidth = 2;
+                      figure.strokeStyle = '#333';
+                      figure.font = 'italic 8pt sans-serif';
+                      figure.textAlign = "center";
+
+                      // Make the graph
+                      figure.beginPath();
+                      figure.moveTo(dag[0], lucht_v[0]);
+                      for(var i = 1; i < lucht_v.length; i ++) {
+                          figure.lineTo(dag[i], lucht_v[i])};
+                      figure.stroke();
 
                       // use fuction createTransform
                       var line = createTransform(domain, range)
@@ -77,8 +98,8 @@
             <h3>deel 2</h3>
             <p> deel 2 </p>
 
-            <script>console.log("Hello world!");</script>
             <p>Take a look at <a href="KNMI_20190101.json" target="_blank">KNMI_20190101.json</a></p>
             <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;"></canvas>
+
     </body>
   </html>
