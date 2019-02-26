@@ -11,54 +11,32 @@
             <p>My first paragraph.</p>
             <hr>
             <h2>Inhoud</h2>
-            <!-- <script>
-              var fileName = "data_output.json";
-              var txtFile = new XMLHttpRequest();
-              txtFile.onreadystatechange = function() {
-                  if (txtFile.readyState === 4 && txtFile.status == 200) {
-                      var jsondata = (JSON.parse(txtFile.responseText));
-                      var details = (data.jsondata);
-                      datum = []
-                      min_nsl = []
-                      details.forEach(function(element) {console.log(element);});
-                      details_splitted = details.split()
-                      datum.push(details_splitted[1])
-                      min_nsl.push(details_splitted[3])
-                  }
-              }
-              txtFile.open("GET", fileName);
-              txtFile.send();
-              // for(var i = 0, size = list.length; i < size; i++){var item = data_list[i]; if(matchesLabel(item)){
-              // someFunction(item);}}
-            </script> -->
             <script>
               var fileName = "KNMI_20190101.json";
               var txtFile = new XMLHttpRequest();
               txtFile.onreadystatechange = function() {
                   if (txtFile.readyState === 4 && txtFile.status == 200) {
                       var obj = (JSON.parse(txtFile.responseText));
-                      datum = []
+                      dag = []
                       lucht_v = []
                       var values = (Object.values(obj))
                       console.log(values)
-
-                      values.forEach(function(d){console.log(d.Datum, d.Luchtvochtigheid);
+                      values.forEach(function(d){dag.push(d.Datum);
                       });
+                      values.forEach(function(d){lucht_v.push(d.Luchtvochtigheid);
+                      });
+                      console.log(dag);
+                      console.log(lucht_v);
 
-                      for (let i = 0; i < values.length; i++) {
-                      datum.push(parseInt(values[1]))
-                      lucht_v.push(parseInt(values[3]))
-                      };
-                      console.log(typeof datum)
                       // Transform datum to the right format
-                      var date = new Date("January 1, 2018 00:00:00");
-                      console.log(date.getTime());
+                      var dag = new Date("January 1, 2018 00:00:00");
+                      console.log(dag.getTime());
 
                       // calculate domain (datum) and range (min_nsl)
                       domain = []
-                      var domain_min = Math.min(datum)
+                      var domain_min = Math.min(dag)
                       domain.push(domain_min)
-                      var domain_max = Math.max(datum)
+                      var domain_max = Math.max(dag)
                       domain.push(domain_max)
                       range = []
                       var range_min = Math.min(lucht_v)
@@ -68,8 +46,6 @@
 
                       // use fuction createTransform
                       var line = createTransform(domain, range)
-
-
 
                       function createTransform(domain, range){
                     	// domain is a two-element array of the data bounds [domain_min, domain_max]
