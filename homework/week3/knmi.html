@@ -36,18 +36,20 @@
               var txtFile = new XMLHttpRequest();
               txtFile.onreadystatechange = function() {
                   if (txtFile.readyState === 4 && txtFile.status == 200) {
-                      console.log(JSON.parse(txtFile.responseText));
-                      var info = JSON.parse(txtFile.responseText);
-                      // var info = (details.data)
-                      // console.log(info)
+                      var obj = (JSON.parse(txtFile.responseText));
                       datum = []
                       lucht_v = []
-                      info.forEach(function(element) {
-                      datum.push(parseInt(element[1]))
-                      lucht_v.push(parseInt(element[3]))
+                      var values = (Object.values(obj))
+                      console.log(values)
+
+                      values.forEach(function(d){console.log(d.Datum, d.Luchtvochtigheid);
                       });
-                      console.log(datum)
-                      console.log(lucht_v)
+
+                      for (let i = 0; i < values.length; i++) {
+                      datum.push(parseInt(values[1]))
+                      lucht_v.push(parseInt(values[3]))
+                      };
+                      console.log(typeof datum)
                       // Transform datum to the right format
                       var date = new Date("January 1, 2018 00:00:00");
                       console.log(date.getTime());
