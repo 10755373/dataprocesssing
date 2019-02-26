@@ -17,7 +17,7 @@ def read_csv(filename):
             if len(row) > 1 and row[0][0] is not '#':
                 temp = row[2].strip()
                 temp_cleaned = temp.strip(';')
-                data_list.append({"Datum" : int(row[1]), "Relatieve luchtvochtigheid" : int(temp_cleaned)})
+                data_list.append({"Datum" : int(row[1]), "Luchtvochtigheid" : int(temp_cleaned)})
     return(data_list)
 
 def make_json(filename):
