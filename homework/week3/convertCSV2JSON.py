@@ -18,22 +18,15 @@ def read_csv(filename):
             if len(row) > 1 and row[0][0] is not '#':
                 temp = row[2].strip()
                 temp_cleaned = temp.strip(';')
-                data_list.append({"Datum" : int(row[1]), "Luchtvochtigheid" : int(temp_cleaned)})
+                data_list.append({"Datum" : int(row[1]), "Luchtvochtigheid" : float(temp_cleaned)})
     return(data_list)
-
-# def new_time(input):
-#     dt = datetime.datetime(temp_cleaned)
-#     dt = int(dt)
-
 
 def make_json(filename):
     with open(output, "w") as jsonfile:
         json.dump(data_list, jsonfile)
 
-
 if __name__ == "__main__":
     read_csv(input)
-    # new_date()
     make_json(data_list)
 
 
