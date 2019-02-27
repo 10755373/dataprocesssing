@@ -10,13 +10,17 @@
             <p>My first paragraph.</p>
             <hr>
             <h2>Inhoud</h2>
-            <canvas id="graph" width="300" height="200"></canvas>
+            <canvas id="graph" width="800" height="800"></canvas>
             <script>
               var fileName = "KNMI_20190101.json";
               var txtFile = new XMLHttpRequest();
               txtFile.onreadystatechange = function() {
                   if (txtFile.readyState === 4 && txtFile.status == 200) {
                       var obj = (JSON.parse(txtFile.responseText));
+                      // let keys = Object.keys(obj.bpi)
+                      // for (let i = 0; i < keys.length; i++) {
+                      //   let item = obj.bpi[i]
+                      // };
                       dag = []
                       lucht_v = []
                       var values = (Object.values(obj))
@@ -30,43 +34,70 @@
                       console.log(typeof(dag));
                       console.log(typeof(lucht_v));
 
+                      // function parseData(data) {
+                      // var arr = [];
+                      // for (var i in data.bpi) {
+                      //     arr.push(
+                      //        {
+                      //           date: new Date(i), //date
+                      //           value: +data.bpi[i] //convert string to number
+                      //        });
+                      //  }
+                      //  return arr;
+                      //   }
+
                       // Transform datum to the right format
                       var dag = new Date("January 1, 2018 00:00:00");
                       console.log(dag.getTime());
 
-                      // calculate domain (datum) and range (min_nsl)
-                      domain = []
-                      var domain_min = Math.min(dag)
-                      domain.push(domain_min)
-                      var domain_max = Math.max(dag)
-                      domain.push(domain_max)
-                      range = []
-                      var range_min = Math.min(lucht_v)
-                      range.push(range_min)
-                      var range_max = Math.max(lucht_v)
-                      range.push(range_max)
-                      console.log(domain);
-                      console.log(range);
+                      // calculate min and max
+                      dag_min_max = []
+                      var dag_min = Math.min(dag)
+                      dag_min_max.push(dag_min)
+                      var dag_max = Math.max(dag)
+                      dag_min_max.push(dag_max)
+                      lucht_min_max = []
+                      var lucht_v_min = Math.min(lucht_v)
+                      lucht_min_max.push(lucht_v_min)
+                      var lucht_v_max = Math.max(lucht_v)
+                      lucht_min_max.push(lucht_v_max)
+                      console.log(dag_min_max);
+                      console.log(lucht_min_max);
 
-                      // Initialize the graph
+                      var x_range = [0, 800]
+                      var y_range = [0, 800]
+
+                      // Use javascript variables
+                      // var graph;
+                      // var xPadding = 50;
+                      // var yPadding = 50;
+                      // var data = { values: [{X: dag, Y: lucht_v}]};
+
+                      // // Set properties to the context
+                      // ctx.lineWidth = 2;
+                      // ctx.strokeStyle = '#333';
+                      // ctx.font = 'italic 8pt sans-serif';
+                      // ctx.textAlign = "center";
+
+                      // // use fuction createTransform
+                      var x = (createTransform(dag_min_max, x_range));
+                      var y = (createTransform(lucht_min_max, y_range));
+                      console.log(x);
+                      console.log(y);
+
+                      // // Get the Canvas context
                       var graph_id = document.getElementById("graph");
-                      var figure = graph_id.getContext('2d');
+                      var ctx = graph_id.getContext("2d");
+                      ctx.rect(0, 0, 800, 800)
+                      ctx.stroke();
 
-                      // Determine the lay-out
-                      figure.lineWidth = 2;
-                      figure.strokeStyle = '#333';
-                      figure.font = 'italic 8pt sans-serif';
-                      figure.textAlign = "center";
-
-                      // Make the graph
-                      figure.beginPath();
-                      figure.moveTo(dag[0], lucht_v[0]);
-                      for(var i = 1; i < lucht_v.length; i ++) {
-                          figure.lineTo(dag[i], lucht_v[i])};
-                      figure.stroke();
-
-                      // use fuction createTransform
-                      var line = createTransform(domain, range)
+                      // // Draw the graph
+                      ctx.beginPath();
+                      ctx.moveTo(dag[0], lucht_v[0]);
+                      for(var i = 0; i < lucht_v.length; i ++) {
+                          ctx.lineTo(x(dag[i]), y(lucht_v[i]));
+                      }
+                      ctx.stroke();
 
                       function createTransform(domain, range){
                     	// domain is a two-element array of the data bounds [domain_min, domain_max]
