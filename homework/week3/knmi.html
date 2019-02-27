@@ -17,10 +17,6 @@
               txtFile.onreadystatechange = function() {
                   if (txtFile.readyState === 4 && txtFile.status == 200) {
                       var obj = (JSON.parse(txtFile.responseText));
-                      // let keys = Object.keys(obj.bpi)
-                      // for (let i = 0; i < keys.length; i++) {
-                      //   let item = obj.bpi[i]
-                      // };
                       dag = []
                       lucht_v = []
                       var values = (Object.values(obj))
@@ -31,70 +27,56 @@
                       });
                       console.log(dag);
                       console.log(lucht_v);
-                      console.log(typeof(dag));
-                      console.log(typeof(lucht_v));
+                      console.log(typeof(dag[3]));
+                      console.log(typeof(lucht_v[2]));
 
-                      // function parseData(data) {
-                      // var arr = [];
-                      // for (var i in data.bpi) {
-                      //     arr.push(
-                      //        {
-                      //           date: new Date(i), //date
-                      //           value: +data.bpi[i] //convert string to number
-                      //        });
-                      //  }
-                      //  return arr;
-                      //   }
-
-                      // Transform datum to the right format
-                      var dag = new Date("January 1, 2018 00:00:00");
-                      console.log(dag.getTime());
+                      // var someDate = new Date(dag);
+                      // someDate = someDate.getTime();
+                      // console.log(dag)
 
                       // calculate min and max
                       dag_min_max = []
-                      var dag_min = Math.min(dag)
+                      var dag_min = Math.min(...dag)
                       dag_min_max.push(dag_min)
-                      var dag_max = Math.max(dag)
+                      var dag_max = Math.max(...dag)
                       dag_min_max.push(dag_max)
                       lucht_min_max = []
-                      var lucht_v_min = Math.min(lucht_v)
+                      var lucht_v_min = Math.min(...lucht_v)
                       lucht_min_max.push(lucht_v_min)
-                      var lucht_v_max = Math.max(lucht_v)
+                      var lucht_v_max = Math.max(...lucht_v)
                       lucht_min_max.push(lucht_v_max)
                       console.log(dag_min_max);
                       console.log(lucht_min_max);
 
-                      var x_range = [0, 800]
-                      var y_range = [0, 800]
-
-                      // Use javascript variables
-                      // var graph;
-                      // var xPadding = 50;
-                      // var yPadding = 50;
-                      // var data = { values: [{X: dag, Y: lucht_v}]};
-
-                      // // Set properties to the context
-                      // ctx.lineWidth = 2;
-                      // ctx.strokeStyle = '#333';
-                      // ctx.font = 'italic 8pt sans-serif';
-                      // ctx.textAlign = "center";
+                      // // Get the Canvas context
+                      var graph_id = document.getElementById("graph");
+                      var ctx = graph_id.getContext("2d");
+                      var x_range = [100, 400]
+                      var y_range = [100, 400]
 
                       // // use fuction createTransform
                       var x = (createTransform(dag_min_max, x_range));
                       var y = (createTransform(lucht_min_max, y_range));
-                      console.log(x);
-                      console.log(y);
 
-                      // // Get the Canvas context
-                      var graph_id = document.getElementById("graph");
-                      var ctx = graph_id.getContext("2d");
-                      ctx.rect(0, 0, 800, 800)
+                      ctx.rect(100, 100, 300, 300)
                       ctx.stroke();
+
+                      // Use javascript variables
+                      // var graph;
+                      var xPadding = 50;
+                      var yPadding = 50;
+                      // var data = { values: [{X: dag, Y: lucht_v}]};
+
+                      // Set properties to the context
+                      ctx.lineWidth = 1;
+                      ctx.strokeStyle = '#333';
+                      ctx.font = 'italic 8pt sans-serif';
+                      ctx.textAlign = "center";
 
                       // // Draw the graph
                       ctx.beginPath();
-                      ctx.moveTo(dag[0], lucht_v[0]);
-                      for(var i = 0; i < lucht_v.length; i ++) {
+                      ctx.moveTo(x(dag[0]), y(lucht_v[0]));
+                      for(var i = 0; i < 365; i ++) {
                           ctx.lineTo(x(dag[i]), y(lucht_v[i]));
                       }
                       ctx.stroke();
@@ -126,11 +108,6 @@
               txtFile.open("GET", fileName);
               txtFile.send();
             </script>
-            <h3>deel 2</h3>
-            <p> deel 2 </p>
-
             <p>Take a look at <a href="KNMI_20190101.json" target="_blank">KNMI_20190101.json</a></p>
-            <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;"></canvas>
-
     </body>
   </html>
