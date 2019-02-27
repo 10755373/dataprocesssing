@@ -4,7 +4,8 @@
 import json
 import csv
 import pandas as pd
-import xlrd
+import datetime
+
 
 input = "KNMI_20190101.csv"
 output = "KNMI_20190101.json"
@@ -20,12 +21,19 @@ def read_csv(filename):
                 data_list.append({"Datum" : int(row[1]), "Luchtvochtigheid" : int(temp_cleaned)})
     return(data_list)
 
+# def new_time(input):
+#     dt = datetime.datetime(temp_cleaned)
+#     dt = int(dt)
+
+
 def make_json(filename):
     with open(output, "w") as jsonfile:
         json.dump(data_list, jsonfile)
 
+
 if __name__ == "__main__":
     read_csv(input)
+    # new_date()
     make_json(data_list)
 
 
