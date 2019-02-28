@@ -6,10 +6,9 @@
       <title>Rinus van Grunsven; 10755373; Etmaalgemiddelde relatieve vochtigheid (in procenten) van 01-01-2018 t/m 01-01-2019</title>
         </head>
           <body>
-            <h1>My First Heading</h1>
-            <p>My first paragraph.</p>
+            <h1>Rinus van Grunsven; 10755373</h1>
+            <p>Etmaalgemiddelde relatieve vochtigheid (in procenten) van 01-01-2018 t/m 01-01-2019</p>
             <hr>
-            <h2>Inhoud</h2>
             <canvas id="graph" width="800" height="800"></canvas>
             <script>
               var fileName = "KNMI_20190101.json";
@@ -19,16 +18,29 @@
                       var obj = (JSON.parse(txtFile.responseText));
                       dag = []
                       lucht_v = []
-                      var values = (Object.values(obj))
-                      console.log(values)
-                      values.forEach(function(d){dag.push(d.Datum);
+                      obj.forEach(function(d){dag.push(d.Datum);
                       });
-                      values.forEach(function(d){lucht_v.push(Number(d.Luchtvochtigheid, 10));
+                      obj.forEach(function(d){lucht_v.push(Number(d.Luchtvochtigheid, 10));
                       });
-                      console.log(dag);
-                      console.log(lucht_v);
-                      console.log(typeof(dag[3]));
-                      console.log(typeof(lucht_v[2]));
+
+                      // for(dag = 0; dag < dag.length; count ++){
+                      //   year = date.slice(0, 4);
+                      //   month = date.slice(4,6);
+                      //   day = date.slice(6, 8);
+                      // }
+                      //
+                      // var new_dag = new Date(year, month, day)
+                      //
+                      // // converting date into int and then day number (1-366)
+                			// for (var i = 0; i < dag.length; i++) {
+                			// 	dag[i] = dag[i].getTime();
+                			// 	dag[i] = parseInt(dag[i]);
+                			// 	dag[i] = Math.round((dag[i] / 86400000) - 16801);
+                      // };
+
+
+                      //   var date = new Date(year, parseInt(month) - 1, parseInt(day) + 1);
+      				        //         dag.push(date);
 
                       // calculate min and max
                       dag_min_max = []
@@ -41,74 +53,34 @@
                       lucht_min_max.push(lucht_v_min)
                       var lucht_v_max = Math.max(...lucht_v)
                       lucht_min_max.push(lucht_v_max)
-                      console.log(dag_min_max);
-                      console.log(lucht_min_max);
-                      var x_range = [100, 400]
-                      var y_range = [100, 400]
 
-                      // // Get the Canvas context
-                      var graph_id = document.getElementById("graph");
-                      var ctx = graph_id.getContext("2d");
-                      // var Trends = new Chart (ctx, options);
+                      var x_range = [100, 600]
+                      var y_range = [50, 600]
 
-                      console.log(ctx);
+                  // Get the Canvas context
+                  var ctx = document.getElementById("graph").getContext("2d");
+            			ctx.font = "10px Arial";
+                  ctx.fillText("Relatieve luchtvochtigheid in De Bilt", 50, 15);
+                  ctx.font = "7px Arial";
+                  ctx.fillText("2018", 10, 100);
 
-                      // // use fuction createTransform
-                      var x = (createTransform(dag_min_max, x_range));
-                      var y = (createTransform(lucht_min_max, y_range));
+                  // // Draw rect for the graph
+                  // ctx.rect(50, 50, 700, 700)
+                  // ctx.stroke();
 
-                      ctx.rect(100, 100, 300, 300)
-                      ctx.stroke();
+                  // Set properties to the context
+                  ctx.lineWidth = 1;
+                  ctx.strokeStyle = '#333';
+                  ctx.font = 'italic 8pt sans-serif';
+                  ctx.textAlign = "center";
 
-                      // Use javascript variables
-                      // var graph;
-                      var xPadding = 50;
-                      var yPadding = 50;
-                      // var data = { values: [{X: dag, Y: lucht_v}]};
+                  // Make lines in graph
+                  ctx.beginPath();
+                  ctx.moveTo(100, 50);
+                  ctx.lineTo(100, 600);
+                  ctx.lineTo(600, 600);
+                  ctx.stroke();
 
-                      // Set properties to the context
-                      ctx.lineWidth = 1;
-                      ctx.strokeStyle = '#333';
-                      ctx.font = 'italic 8pt sans-serif';
-                      ctx.textAlign = "center";
-
-                      // // Draw the graph
-                      ctx.beginPath();
-                      ctx.moveTo(x(dag[0]), y(lucht_v[0]));
-                      for(var i = 0; i < 365; i ++) {
-                          ctx.lineTo(x(dag[i]), y(lucht_v[i]));
-                      }
-                      ctx.stroke();
-
-                      var data = {
-                        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", ],
-                        datasets: [
-                        {
-                            label: "Relatieve luchtvochtigheid",
-                            fillColor: "rgba(220,220,220,0.2)",
-                            strokeColor: "rgba(220,220,220,1)",
-                            pointColor: "rgba(220,220,220,1)",
-                            pointStrokeColor: "#fff",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(220,220,220,1)",
-                            data: lucht_v
-                        }]};
-                        var options = {
-                          type: 'line',
-                          data: data,
-                          options: {
-                              pointDot: true,
-                              datasetStrokeWidth : 3,
-                              bezierCurve : false,
-                              scaleShowHorizontalLines: true,
-                              scaleGridLineWidth : 2,
-                              scaleGridLineColor : "#EEEEEE",
-                              scaleLineWidth: 3,
-                              scaleLineColor: "#000000",
-                              scaleFontFamily: '"Gotham Book",sans-serif',
-                              scaleFontSize: 18,
-                          }
-                      };
 
                       function createTransform(domain, range){
                     	// domain is a two-element array of the data bounds [domain_min, domain_max]
@@ -131,12 +103,38 @@
                         return function(x){
                           return alpha * x + beta;
                         }
+                        }
+                    // // use fuction createTransform
+                    var x = (createTransform(dag_min_max, x_range));
+                    var y = (createTransform(lucht_min_max, y_range));
+
+                    // // Draw the graph
+                    ctx.beginPath();
+                    ctx.moveTo(x(dag[0]), y(lucht_v[0]));
+                    for(var i = 0; i < lucht_v.length; i ++) {
+                        ctx.lineTo(x(dag[i]), y(lucht_v[i]));
                     }
+                    ctx.stroke();
+
+                    // draw month indicators
+                    var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    month_number = 0;
+                    for (var hori = 100; hori <= 600; hori = hori + 42) {
+                      ctx.beginPath();
+                      ctx.moveTo(hori, 600);
+                      ctx.lineTo(hori, 600);
+                      ctx.stroke();
+                      if (month_number < 12) {
+                        ctx.font = "5px Arial";
+                        ctx.fillText(months[month_number], hori + 3, 610);
+                        month_number++;
+                      }
                   }
               }
+            }
               txtFile.open("GET", fileName);
               txtFile.send();
             </script>
-            <p>Take a look at <a href="KNMI_20190101.json" target="_blank">KNMI_20190101.json</a></p>
+            <p>Zie de link voor de gebruikte gegevens <a href="KNMI_20190101.json" target="_blank">KNMI_20190101.json</a></p>
     </body>
   </html>
