@@ -1,15 +1,15 @@
-<!-- Rinus van Grunsven; 10755373; Analyse van de etmaalgemiddelde relatieve vochtigheid (in procenten) in De Bilt -->
+<!-- Rinus van Grunsven; 10755373; Analyse van de etmaalgemiddelde relatieve vochtigheid (in procentpunten) in De Bilt -->
 
 <!DOCTYPE html>
   <html>
     <head>
-      <title>Rinus van Grunsven; 10755373; Etmaalgemiddelde relatieve vochtigheid (in procenten) van 01-01-2018 t/m 01-01-2019</title>
+      <title>Rinus van Grunsven; 10755373; Etmaalgemiddelde relatieve vochtigheid (in procentpunten) van 01-01-2018 t/m 01-01-2019</title>
         </head>
           <body>
             <h1>Rinus van Grunsven; 10755373</h1>
-            <p>Etmaalgemiddelde relatieve vochtigheid (in procenten) van 01-01-2018 t/m 01-01-2019</p>
+            <p>Etmaalgemiddelde relatieve vochtigheid (in procentpunten) van 01-01-2018 t/m 01-01-2019</p>
             <hr>
-            <canvas id="graph" width="600" height="630"></canvas>
+            <canvas id="graph" width="1000" height="750"></canvas>
             <script>
               var fileName = "KNMI_20190101.json";
               var txtFile = new XMLHttpRequest();
@@ -23,29 +23,11 @@
                       // obj.forEach(function(d){dag.push(Number(d.Datum))});
                       obj.forEach(function(d){
                         date = d.Datum.toString();
-                        year = date.slice(0,4);
-                        month = date.slice(4,6);
-                        day = date.slice(6,8);
-                        var s = new Date(year, Number(month) - 1, Number(day) - 1);
+                        var s = new Date(date.slice(0,4), Number(date.slice(4,6)) - 1, Number(date.slice(6,8)) - 1);
                         var q = s.getTime();
                         var w = Number(q);
                         dag.push(w);
                       });
-                      // console.log(typeof(dag));
-                      // console.log(dag);
-                      console.log(lucht_v);
-                      console.log(dag);
-
-                      // for(var i = 0; i < dag.length; i ++){
-                      //   dag[i] = dag[i].getTime();
-                      // };
-                      //
-                      // dag.forEach(function(h){
-                      //   var d = new Date();
-                      //   var n = d.getTime();
-                      //
-                      // });
-
 
                       // calculate min and max
                       dag_min_max = []
@@ -58,18 +40,20 @@
                       lucht_min_max.push(lucht_v_min)
                       var lucht_v_max = Math.max(...lucht_v)
                       lucht_min_max.push(lucht_v_max)
+                      console.log(lucht_min_max);
 
-                      var x_range = [100, 600]
+                      // Determine ranges
+                      var x_range = [50, 950]
                       var y_range = [50, 600]
 
                   // Get the Canvas context
                   var ctx = document.getElementById("graph").getContext("2d");
             			ctx.font = "20px Arial";
-                  ctx.fillText("Relatieve luchtvochtigheid in De Bilt (2018)", 200, 30);
+                  ctx.fillText("Relatieve luchtvochtigheid (in procentpunten) in De Bilt gedurende het jaar 2018", 200, 20);
 
-                  // // Draw rect for the graph
-                  // ctx.rect(50, 50, 700, 700)
-                  // ctx.stroke();
+                  // Draw rect for the graph
+                  ctx.rect(20, 35, 960, 600)
+                  ctx.stroke();
 
                   // Set properties to the context
                   ctx.lineWidth = 1;
@@ -79,12 +63,12 @@
 
                   // Make lines in graph
                   ctx.beginPath();
-                  ctx.moveTo(100, 50);
-                  ctx.lineTo(100, 600);
-                  ctx.lineTo(600, 600);
+                  ctx.moveTo(50, 50);
+                  ctx.lineTo(50, 600);
+                  ctx.lineTo(950, 600);
                   ctx.stroke();
 
-
+                      // Function to determine to place of both x and y point
                       function createTransform(domain, range){
                     	// domain is a two-element array of the data bounds [domain_min, domain_max]
                     	// range is a two-element array of the screen bounds [range_min, range_max]
@@ -107,6 +91,7 @@
                           return alpha * x + beta;
                         }
                         }
+
                     // // use fuction createTransform
                     var x = (createTransform(dag_min_max, x_range));
                     var y = (createTransform(lucht_min_max, y_range));
@@ -120,12 +105,12 @@
                     ctx.stroke();
 
                     // draw month indicators
-                    var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    var months = ["Jan, 1st", "Feb, 1st", "Mar, 1st", "Apr, 1st", "May, 1st", "June, 1st", "July, 1st", "Aug, 1st", "Sep, 1st", "Oct, 1st", "Nov, 1st", "Dec, 1st"];
                     month_number = 0;
-                    for (var hori = 100; hori <= 600; hori = hori + 42) {
+                    for (var hori = 50; hori <= 950; hori = hori + 77) {
                       ctx.beginPath();
-                      ctx.moveTo(hori, 600);
-                      ctx.lineTo(hori, 600);
+                      ctx.moveTo(hori, 605);
+                      ctx.lineTo(hori, 605);
                       ctx.stroke();
                       if (month_number < 12) {
                         ctx.font = "10px Arial";
@@ -135,15 +120,15 @@
                     }
 
                     // draw luchtvochtigheid indicators
-                    var luchtvochtigheid = 0;
+                    var luchtvochtigheid = 32;
                     for(var line = 600; line > 50; line = line - 40){
                       ctx.beginPath();
-                      ctx.moveTo(70, line);
-                      ctx.lineTo(70, line);
+                      ctx.moveTo(50, line);
+                      ctx.lineTo(50, line);
                       ctx.stroke();
                       ctx.font = "10px Arial";
-                      ctx.fillText(luchtvochtigheid, 95, line);
-                      luchtvochtigheid = luchtvochtigheid + 40;
+                      ctx.fillText(luchtvochtigheid, 40, line);
+                      luchtvochtigheid = luchtvochtigheid + 5;
                     };
               }
             }
