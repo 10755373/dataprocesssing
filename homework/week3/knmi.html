@@ -20,19 +20,21 @@
                       lucht_v = []
                       obj.forEach(function(d){lucht_v.push(Number(d.Luchtvochtigheid, 10));
                       });
-                      // obj.forEach(function(d){
-                      //   waarde = d.Datum;
-                      //   year = waarde[0, 4];
-                      //   month = waarde[4, 6];
-                      //   day = waarde[6, 8];
-                      //   var s = new Date(year, Number(month) - 1, Number(day) + 1);
-                      //   var q = s.getTime();
-                      //   var w = Number(q);
-                      //   dag.push(w);
-                      // });
+                      // obj.forEach(function(d){dag.push(Number(d.Datum))});
+                      obj.forEach(function(d){
+                        date = d.Datum.toString();
+                        year = date.slice(0,4);
+                        month = date.slice(4,6);
+                        day = date.slice(6,8);
+                        var s = new Date(year, Number(month) - 1, Number(day) - 1);
+                        var q = s.getTime();
+                        var w = Number(q);
+                        dag.push(w);
+                      });
                       // console.log(typeof(dag));
                       // console.log(dag);
                       console.log(lucht_v);
+                      console.log(dag);
 
                       // for(var i = 0; i < dag.length; i ++){
                       //   dag[i] = dag[i].getTime();
@@ -56,7 +58,6 @@
                       lucht_min_max.push(lucht_v_min)
                       var lucht_v_max = Math.max(...lucht_v)
                       lucht_min_max.push(lucht_v_max)
-                      console.log(lucht_min_max);
 
                       var x_range = [100, 600]
                       var y_range = [50, 600]
@@ -113,7 +114,7 @@
                     // // Draw the graph
                     ctx.beginPath();
                     ctx.moveTo(x(dag[0]), y(lucht_v[0]));
-                    for(var i = 0; i < lucht_v.length; i ++) {
+                    for(i = 0; i < lucht_v.length; i ++) {
                         ctx.lineTo(x(dag[i]), y(lucht_v[i]));
                     }
                     ctx.stroke();
@@ -135,10 +136,10 @@
 
                     // draw luchtvochtigheid indicators
                     var luchtvochtigheid = 0;
-                    for(var line = 600; line > 50; line = line + 40){
+                    for(var line = 600; line > 50; line = line - 40){
                       ctx.beginPath();
-                      ctx.moveTo(100, line);
-                      ctx.lineTo(100, line);
+                      ctx.moveTo(70, line);
+                      ctx.lineTo(70, line);
                       ctx.stroke();
                       ctx.font = "10px Arial";
                       ctx.fillText(luchtvochtigheid, 95, line);
