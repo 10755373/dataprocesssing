@@ -9,7 +9,7 @@
             <h1>Rinus van Grunsven; 10755373</h1>
             <p>Etmaalgemiddelde relatieve vochtigheid (in procenten) van 01-01-2018 t/m 01-01-2019</p>
             <hr>
-            <canvas id="graph" width="800" height="800"></canvas>
+            <canvas id="graph" width="600" height="630"></canvas>
             <script>
               var fileName = "KNMI_20190101.json";
               var txtFile = new XMLHttpRequest();
@@ -18,29 +18,32 @@
                       var obj = (JSON.parse(txtFile.responseText));
                       dag = []
                       lucht_v = []
-                      obj.forEach(function(d){dag.push(d.Datum);
-                      });
                       obj.forEach(function(d){lucht_v.push(Number(d.Luchtvochtigheid, 10));
                       });
+                      // obj.forEach(function(d){
+                      //   waarde = d.Datum;
+                      //   year = waarde[0, 4];
+                      //   month = waarde[4, 6];
+                      //   day = waarde[6, 8];
+                      //   var s = new Date(year, Number(month) - 1, Number(day) + 1);
+                      //   var q = s.getTime();
+                      //   var w = Number(q);
+                      //   dag.push(w);
+                      // });
+                      // console.log(typeof(dag));
+                      // console.log(dag);
+                      console.log(lucht_v);
 
-                      // for(dag = 0; dag < dag.length; count ++){
-                      //   year = date.slice(0, 4);
-                      //   month = date.slice(4,6);
-                      //   day = date.slice(6, 8);
-                      // }
-                      //
-                      // var new_dag = new Date(year, month, day)
-                      //
-                      // // converting date into int and then day number (1-366)
-                			// for (var i = 0; i < dag.length; i++) {
-                			// 	dag[i] = dag[i].getTime();
-                			// 	dag[i] = parseInt(dag[i]);
-                			// 	dag[i] = Math.round((dag[i] / 86400000) - 16801);
+                      // for(var i = 0; i < dag.length; i ++){
+                      //   dag[i] = dag[i].getTime();
                       // };
+                      //
+                      // dag.forEach(function(h){
+                      //   var d = new Date();
+                      //   var n = d.getTime();
+                      //
+                      // });
 
-
-                      //   var date = new Date(year, parseInt(month) - 1, parseInt(day) + 1);
-      				        //         dag.push(date);
 
                       // calculate min and max
                       dag_min_max = []
@@ -53,16 +56,15 @@
                       lucht_min_max.push(lucht_v_min)
                       var lucht_v_max = Math.max(...lucht_v)
                       lucht_min_max.push(lucht_v_max)
+                      console.log(lucht_min_max);
 
                       var x_range = [100, 600]
                       var y_range = [50, 600]
 
                   // Get the Canvas context
                   var ctx = document.getElementById("graph").getContext("2d");
-            			ctx.font = "10px Arial";
-                  ctx.fillText("Relatieve luchtvochtigheid in De Bilt", 50, 15);
-                  ctx.font = "7px Arial";
-                  ctx.fillText("2018", 10, 100);
+            			ctx.font = "20px Arial";
+                  ctx.fillText("Relatieve luchtvochtigheid in De Bilt (2018)", 200, 30);
 
                   // // Draw rect for the graph
                   // ctx.rect(50, 50, 700, 700)
@@ -125,16 +127,28 @@
                       ctx.lineTo(hori, 600);
                       ctx.stroke();
                       if (month_number < 12) {
-                        ctx.font = "5px Arial";
+                        ctx.font = "10px Arial";
                         ctx.fillText(months[month_number], hori + 3, 610);
                         month_number++;
                       }
-                  }
+                    }
+
+                    // draw luchtvochtigheid indicators
+                    var luchtvochtigheid = 0;
+                    for(var line = 600; line > 50; line = line + 40){
+                      ctx.beginPath();
+                      ctx.moveTo(100, line);
+                      ctx.lineTo(100, line);
+                      ctx.stroke();
+                      ctx.font = "10px Arial";
+                      ctx.fillText(luchtvochtigheid, 95, line);
+                      luchtvochtigheid = luchtvochtigheid + 40;
+                    };
               }
             }
               txtFile.open("GET", fileName);
               txtFile.send();
             </script>
-            <p>Zie de link voor de gebruikte gegevens <a href="KNMI_20190101.json" target="_blank">KNMI_20190101.json</a></p>
+            <p>Zie de link voor de gebruikte gegevens: <a href="KNMI_20190101.json" target="_blank">KNMI_20190101.json</a></p>
     </body>
   </html>
