@@ -30,10 +30,6 @@
                       console.log(typeof(dag[3]));
                       console.log(typeof(lucht_v[2]));
 
-                      // var someDate = new Date(dag);
-                      // someDate = someDate.getTime();
-                      // console.log(dag)
-
                       // calculate min and max
                       dag_min_max = []
                       var dag_min = Math.min(...dag)
@@ -47,12 +43,15 @@
                       lucht_min_max.push(lucht_v_max)
                       console.log(dag_min_max);
                       console.log(lucht_min_max);
+                      var x_range = [100, 400]
+                      var y_range = [100, 400]
 
                       // // Get the Canvas context
                       var graph_id = document.getElementById("graph");
                       var ctx = graph_id.getContext("2d");
-                      var x_range = [100, 400]
-                      var y_range = [100, 400]
+                      // var Trends = new Chart (ctx, options);
+
+                      console.log(ctx);
 
                       // // use fuction createTransform
                       var x = (createTransform(dag_min_max, x_range));
@@ -80,6 +79,36 @@
                           ctx.lineTo(x(dag[i]), y(lucht_v[i]));
                       }
                       ctx.stroke();
+
+                      var data = {
+                        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", ],
+                        datasets: [
+                        {
+                            label: "Relatieve luchtvochtigheid",
+                            fillColor: "rgba(220,220,220,0.2)",
+                            strokeColor: "rgba(220,220,220,1)",
+                            pointColor: "rgba(220,220,220,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: lucht_v
+                        }]};
+                        var options = {
+                          type: 'line',
+                          data: data,
+                          options: {
+                              pointDot: true,
+                              datasetStrokeWidth : 3,
+                              bezierCurve : false,
+                              scaleShowHorizontalLines: true,
+                              scaleGridLineWidth : 2,
+                              scaleGridLineColor : "#EEEEEE",
+                              scaleLineWidth: 3,
+                              scaleLineColor: "#000000",
+                              scaleFontFamily: '"Gotham Book",sans-serif',
+                              scaleFontSize: 18,
+                          }
+                      };
 
                       function createTransform(domain, range){
                     	// domain is a two-element array of the data bounds [domain_min, domain_max]
