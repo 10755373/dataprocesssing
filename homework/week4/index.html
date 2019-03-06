@@ -11,47 +11,32 @@
 			.tooltip {
 			 position: absolute;
 			 text-align: center;
-			 color: black;
-			 width: 40px;
-			 height: 20px;
+			 color: white;
+			 width: 80px;
+			 height: 90px;
 			 padding: 2px;
-			 /* background: rgba(0,0,0,.8); */
+			 background: rgba(0,0,0,.8);
 			 pointer-events: none;
-		 }
-		</style>
+		 	}
 
-		<style>
+			.bar{
+				fill: blue;
+			}
 
-.bar{
-	fill: blue;
-}
+			.bar:hover{
+				fill: orange;
+			}
 
-.bar:hover{
-	fill: orange;
-}
+			.axis {
+				font: 15px times;
+			}
 
-.axis {
-	font: 15px times;
-}
-
-.axis path,
-.axis line {
-	fill: none;
-	stroke: #111;
-	shape-rendering: crispEdges;
-}
-/*
-div.tooltip {
-    position: absolute;
-    z-index: 10;
-    visibility: hidden;
-    background-color: lightblue;
-    text-align: center;
-    padding: 5px;
-    border-radius: 5px;
-    font-weight: bold;
-    color: bue;
-} */
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: #111;
+				shape-rendering: crispEdges;
+			}
 
 </style>
 	</head>
@@ -109,13 +94,6 @@ div.tooltip {
 		      .attr("dx", "-.5em")
 		      .attr("dy", "-.4em")
 		      .attr("transform", "rotate(-90)");
-				// .append("text")
-				// 	// .attr("transform", "rotate(-90)")
-				// 	.attr("y", 6)
-				// 	.attr("dy", ".6em")
-				// 	.style("text-anchor", "end")
-				// 	.text("Datum");
-
 
 			// Determine y as
 		  svg.append("g")
@@ -150,7 +128,7 @@ div.tooltip {
 	    function mousemove(){
 	        var d = d3.select(this).data()[0]
 	        div
-	            .html("Datum: " + d.Datum + '<hr/>' + "Windstoot: " + d.Windstoot)
+	            .html("yyyymmdd: " + d.Datum + '<hr/>' + "Windstoot: " + d.Windstoot)
 	            .style('left', (d3.event.pageX - 34) + 'px')
 	            .style('top', (d3.event.pageY - 12) + 'px');
 	    }
@@ -158,14 +136,14 @@ div.tooltip {
 	        div.style('display', 'none');
 	    }
 
-			// Add title above barchart
-			svg.append("text")
-		    .attr("x", (width / 2))
-		    .attr("y", 0)
-		    .attr("text-anchor", "middle")
-		    .style("font-size", "14px")
-				.style('fill', 'darkOrange')
-		    .text("Hoogste windstoot (in 0.1 m/s) in Eindhoven op elke eerste januari van 2006 t/m 2019");
+		// Add title above barchart
+		svg.append("text")
+	    .attr("x", (width / 2))
+	    .attr("y", 0)
+	    .attr("text-anchor", "middle")
+	    .style("font-size", "14px")
+			.style('fill', 'darkOrange')
+	    .text("Hoogste windstoot (in 0.1 m/s) in Eindhoven op elke eerste januari van 2006 t/m 2019");
 		});
 
 		// Addition
