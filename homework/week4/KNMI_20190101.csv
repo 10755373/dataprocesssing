@@ -1,0 +1,26 @@
+﻿# BRON: KONINKLIJK NEDERLANDS METEOROLOGISCH INSTITUUT (KNMI)
+# Opmerking: door stationsverplaatsingen en veranderingen in waarneemmethodieken zijn deze tijdreeksen van dagwaarden mogelijk inhomogeen! Dat betekent dat deze reeks van gemeten waarden niet geschikt is voor trendanalyse. Voor studies naar klimaatverandering verwijzen we naar de gehomogeniseerde reeks maandtemperaturen van De Bilt <http://www.knmi.nl/kennis-en-datacentrum/achtergrond/gehomogeniseerde-reeks-maandtemperaturen-de-bilt> of de Centraal Nederland Temperatuur <http://www.knmi.nl/kennis-en-datacentrum/achtergrond/centraal-nederland-temperatuur-cnt>.
+# 
+# 
+# STN      LON(east)   LAT(north)     ALT(m)  NAME
+# 370:         5.377       51.451      22.60  EINDHOVEN
+# 
+"# YYYYMMDD = Datum (YYYY=jaar MM=maand DD=dag); "
+"# FXX      = Hoogste windstoot (in 0.1 m/s); "
+# 
+# STN,YYYYMMDD,  FXX
+# 
+  370,20060101,   70
+  370,20070101,  170
+  370,20080101,   90
+  370,20090101,   40
+  370,20100101,  100
+  370,20110101,   60
+  370,20120101,  160
+  370,20130101,  120
+  370,20140101,  150
+  370,20150101,  140
+  370,20160101,   80
+  370,20170101,  100
+  370,20180101,  190
+  370,20190101,  130
