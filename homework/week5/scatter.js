@@ -17,7 +17,7 @@ window.onload = function() {
   // if (requests.status >= 200 && requests.status < 400){
   Promise.all(requests).then(function(response) {
       // response.forEach(function(data){
-        let refined_data = transformResponse(response);
+        let refined_data = transformResponse(response)
         // combine the data into one array
         year = undefined
         let draw = main(refined_data, year)
@@ -34,7 +34,7 @@ function main(refined_data, year){
     for (let i = 0; i < refined_data.length; i++){
       if (refined_data[i][0] == year){
         // add data to data thingy
-        data.push(refined_data[i])
+        data.push(refined_data[i]);
       }
     }
   }};
@@ -44,7 +44,7 @@ function setGraph() {
   var year = document.getElementById('1').value;
   Promise.all(requests).then(function(response) {
       // response.forEach(function(data){
-        var data = transformResponse(response);
+        var data = transformResponse(response)
         let draw = main(data, year)
   })
 };
@@ -104,12 +104,25 @@ function transformResponse(response){
           });
       });
       dataCollection.push(dataArray)
-      console.log(dataCollection)
-    })};
+      })
+
+        // combine data based on their years
+        // create new array to which to add combined data
+        var combinedData = []
+        var y = 0
+        for (let i = 0; i < dataCollection[0].length; i++){
+          if (dataCollection[0][i].time != dataCollection[1][i + y].time){
+            y += 1
+          }
+          let tempObj = [dataCollection[1][i + y].time, dataCollection[1][i + y].datapoint, dataCollection[0][i].datapoint, dataCollection[1][i + y].Country]
+          combinedData.push(tempObj)
+        };
+        return combinedData;
+        };
 
 // use d3 to make the plot
 // define heigth, width, padding
-var padding = 30;
+// var padding = 30;
 var margin = {top: 40, right: 120, bottom: 20, left: 30},
         height = 500 - margin.left - margin.right,
         width = 800 - margin.bottom - margin.top;
@@ -122,6 +135,36 @@ var svg = d3.select("body")
             .append("g")
 	 		          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+// Determine domain and range
+var gde_list = []
+for (var i = 0; i < data.length; i++){
+  gde_list.push(data[i][1])
+};
+
+var ppp_list = []
+for (var i = 0; i < data.length; i++){
+  ppp_list.push(data[i][2])
+};
+
+var xAxis = d3.scaleLinear()
+          .range([0, width])
+          .domain([Math.min(...ppp) -10, Math.max(...ppp)])
+          .ticks(10);
+
+var yAxis = d3.scaleLinear()
+          .range(height, 0)
+          .domain([Math.min(...gde) -10, Math.max(...gde)])
+          .ticks(10);
+
+// Add title above barchart
+svg.append("text")
+  .attr("x", (width / 2))
+  .attr("y", 0)
+  .attr("text-anchor", "middle")
+  .style("font-size", "14px")
+	.style('fill', 'darkOrange')
+  .text("Scatterplot: Gross Domestic Expenditure on R&D at current PPP$ vs purchasing parity power");
+
 // create legend block
 var legend = svg.append("rect")
                .attr("class", "legend")
@@ -131,10 +174,25 @@ var legend = svg.append("rect")
                .attr("y", 0)
                .style("fill", "rgb(0, 255, 0)");
 
-// Determine domain and range
-var gde_list = []
-for(var i = 0; i < data.length; i++){
+// Determine the axis
+// Determine x as
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis)
+    .append("text")
+          .attr("class", "x label_x")
+          .attr("x", width - margin.left)
+          .attr("y", 50)
+          .text("parity power");
 
-}
-
-var ppp_list = []
+// Determine y as
+svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis)
+    .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".6em")
+        .style("text-anchor", "end")
+        .text("gde");
