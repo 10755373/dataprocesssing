@@ -9,20 +9,19 @@
 //
 // var requests = [d3.json(le), d3.json(rmw)];
 
-var gde = "http://stats.oecd.org/SDMX-JSON/data/MSTI_PUB/G_PPP.FRA+DEU+KOR+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
-var ppp = "https://stats.oecd.org/SDMX-JSON/data/PPPGDP/PPP.FRA+DEU+KOR+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
+var gde = "http://stats.oecd.org/SDMX-JSON/data/MSTI_PUB/G_PPP.FRA+DEU+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
+var ppp = "https://stats.oecd.org/SDMX-JSON/data/PPPGDP/PPP.FRA+DEU+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
 var requests = [d3.json(gde), d3.json(ppp)];
 
 window.onload = function() {
+  // if (requests.status >= 200 && requests.status < 400){
   Promise.all(requests).then(function(response) {
       // response.forEach(function(data){
         let refined_data = transformResponse(response);
         // combine the data into one array
-        console.log(refined_data)
         year = undefined
         let draw = main(refined_data, year)
         }).catch(function(e){
-          console.log(e);
             throw(e);
         });
       };
@@ -40,18 +39,25 @@ function main(refined_data, year){
     }
   }};
 
+function setGraph() {
+  d3.selectAll("svg").remove();
+  var year = document.getElementById('1').value;
+  Promise.all(requests).then(function(response) {
+      // response.forEach(function(data){
+        var data = transformResponse(response);
+        let draw = main(data, year)
+  })
+};
+
 function transformResponse(response){
     // set array to add response to
     var dataCollection = []
     response.forEach(function(data){
       // access data property of the response
       let dataHere = data.dataSets[0].series;
-      console.log(dataHere)
       // access variables in the response and save length for later
       let series = data.structure.dimensions.series;
       let seriesLength = series.length;
-      // console.log(series)
-
 
       // set up array of variables and array of lengths
       let varArray = [];
@@ -98,4 +104,37 @@ function transformResponse(response){
           });
       });
       dataCollection.push(dataArray)
+      console.log(dataCollection)
     })};
+
+// use d3 to make the plot
+// define heigth, width, padding
+var padding = 30;
+var margin = {top: 40, right: 120, bottom: 20, left: 30},
+        height = 500 - margin.left - margin.right,
+        width = 800 - margin.bottom - margin.top;
+
+// create a svg canvas
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+	 		          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// create legend block
+var legend = svg.append("rect")
+               .attr("class", "legend")
+               .attr("width", margin.right)
+               .attr("height", margin.top * 3)
+               .attr("x", width + margin.left)
+               .attr("y", 0)
+               .style("fill", "rgb(0, 255, 0)");
+
+// Determine domain and range
+var gde_list = []
+for(var i = 0; i < data.length; i++){
+
+}
+
+var ppp_list = []
