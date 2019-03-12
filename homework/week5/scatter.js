@@ -9,15 +9,21 @@
 //
 // var requests = [d3.json(le), d3.json(rmw)];
 
-var gde = "http://stats.oecd.org/SDMX-JSON/data/MSTI_PUB/G_PPP.FRA+DEU+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
-var ppp = "https://stats.oecd.org/SDMX-JSON/data/PPPGDP/PPP.FRA+DEU+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
-var requests = [d3.json(gde), d3.json(ppp)];
+// var gde = "http://stats.oecd.org/SDMX-JSON/data/MSTI_PUB/G_PPP.FRA+DEU+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
+// var ppp = "https://stats.oecd.org/SDMX-JSON/data/PPPGDP/PPP.FRA+DEU+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
+// var requests = [d3.json(gde), d3.json(ppp)];
+// console.log(requests)
+
+var womenInScience = "http://stats.oecd.org/SDMX-JSON/data/MSTI_PUB/TH_WRXRS.FRA+DEU+KOR+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
+var consConf = "http://stats.oecd.org/SDMX-JSON/data/HH_DASH/FRA+DEU+KOR+NLD+PRT+GBR.COCONF.A/all?startTime=2007&endTime=2015"
+var requests = [d3.json(womenInScience), d3.json(consConf)];
 
 window.onload = function() {
   // if (requests.status >= 200 && requests.status < 400){
   Promise.all(requests).then(function(response) {
       // response.forEach(function(data){
         let refined_data = transformResponse(response)
+        console.log(refined_data)
         // combine the data into one array
         year = undefined
         let draw = main(refined_data, year)
@@ -37,6 +43,7 @@ function main(refined_data, year){
         data.push(refined_data[i]);
       }
     }
+    console.log(data)
   }};
 
 function setGraph() {
@@ -99,25 +106,26 @@ function transformResponse(response){
                   // every datapoint has a time and ofcourse a datapoint
                   tempObj["time"] = obs.name;
                   tempObj["datapoint"] = data[0];
+                  // tempObj["Country"] = data.structure.dimensions.series[1].values[0].name
                   dataArray.push(tempObj);
               }
           });
       });
       dataCollection.push(dataArray)
+      console.log(dataCollection)
       })
-
         // combine data based on their years
         // create new array to which to add combined data
-        var combinedData = []
+        var combined = []
         var y = 0
         for (let i = 0; i < dataCollection[0].length; i++){
           if (dataCollection[0][i].time != dataCollection[1][i + y].time){
             y += 1
           }
           let tempObj = [dataCollection[1][i + y].time, dataCollection[1][i + y].datapoint, dataCollection[0][i].datapoint, dataCollection[1][i + y].Country]
-          combinedData.push(tempObj)
+          combined.push(tempObj)
         };
-        return combinedData;
+        return combined;
         };
 
 // use d3 to make the plot
@@ -132,29 +140,30 @@ var svg = d3.select("body")
             .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-	 		          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            // .append("g")
+	 		      //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// Determine domain and range
-var gde_list = []
-for (var i = 0; i < data.length; i++){
-  gde_list.push(data[i][1])
-};
-
-var ppp_list = []
-for (var i = 0; i < data.length; i++){
-  ppp_list.push(data[i][2])
-};
-
-var xAxis = d3.scaleLinear()
-          .range([0, width])
-          .domain([Math.min(...ppp) -10, Math.max(...ppp)])
-          .ticks(10);
-
-var yAxis = d3.scaleLinear()
-          .range(height, 0)
-          .domain([Math.min(...gde) -10, Math.max(...gde)])
-          .ticks(10);
+// // Make list with all gde values
+// var gde_list = []
+// for (var i = 0; i < data.length; i++){
+//   gde_list.push(data[i][1])
+// };
+//
+// // Make list with all ppp values
+// var ppp_list = []
+// for (var i = 0; i < data.length; i++){
+//   ppp_list.push(data[i][2])
+// };
+//
+// var xAxis = d3.scaleLinear()
+//           .range([0, width])
+//           .domain([Math.min(...ppp) -10, Math.max(...ppp)])
+//           .ticks(10);
+//
+// var yAxis = d3.scaleLinear()
+//           .range(height, 0)
+//           .domain([Math.min(...gde) -10, Math.max(...gde)])
+//           .ticks(10);
 
 // Add title above barchart
 svg.append("text")
@@ -176,23 +185,23 @@ var legend = svg.append("rect")
 
 // Determine the axis
 // Determine x as
-svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis)
-    .append("text")
-          .attr("class", "x label_x")
-          .attr("x", width - margin.left)
-          .attr("y", 50)
-          .text("parity power");
-
-// Determine y as
-svg.append("g")
-    .attr("class", "y axis")
-    .call(yAxis)
-    .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".6em")
-        .style("text-anchor", "end")
-        .text("gde");
+// svg.append("g")
+//     .attr("class", "x axis")
+//     .attr("transform", "translate(0," + height + ")")
+//     .call(xAxis)
+//     .append("text")
+//           .attr("class", "x label_x")
+//           .attr("x", width - margin.left)
+//           .attr("y", 50)
+//           .text("parity power");
+//
+// // Determine y as
+// svg.append("g")
+//     .attr("class", "y axis")
+//     .call(yAxis)
+//     .append("text")
+//         .attr("transform", "rotate(-90)")
+//         .attr("y", 6)
+//         .attr("dy", ".6em")
+//         .style("text-anchor", "end")
+//         .text("gde");
