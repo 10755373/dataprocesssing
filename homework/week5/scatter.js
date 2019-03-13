@@ -1,58 +1,27 @@
 // Rinus van Grunsven
 // 10755373
 
-// var life_expectancy = "https://stats.oecd.org/index.aspx?r=467292&erroCode=403&lastaction=login_submit#"
-// var min_wage = "https://stats.oecd.org/index.aspx?r=467292&erroCode=403&lastaction=login_submit#"
-//
-// var le = "https://stats.oecd.org/SDMX-JSON/data/RMW/AUS+BEL+CAN+CHL+COL+CZE+EST+FRA+DEU+GRC+HUN+IRL+ISR+JPN+KOR+LVA+LTU+LUX+MEX+NLD+NZL+POL+PRT+SVK+SVN+ESP+TUR+GBR+USA+CRI+BRA+RUS.EXR+PPP.H+A/all?startTime=2000&endTime=2017&dimensionAtObservation=allDimensions"
-// var rmw = "https://stats.oecd.org/SDMX-JSON/data/RMW/AUS+BEL+CAN+CHL+COL+CZE+EST+FRA+DEU+GRC+HUN+IRL+ISR+JPN+KOR+LVA+LTU+LUX+MEX+NLD+NZL+POL+PRT+SVK+SVN+ESP+TUR+GBR+USA+CRI+BRA+RUS.EXR+PPP.H+A/all?startTime=2000&endTime=2017&dimensionAtObservation=allDimensions"
-//
-// var requests = [d3.json(le), d3.json(rmw)];
-
-// var gde = "http://stats.oecd.org/SDMX-JSON/data/MSTI_PUB/G_PPP.FRA+DEU+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
-// var ppp = "https://stats.oecd.org/SDMX-JSON/data/PPPGDP/PPP.FRA+DEU+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
-// var requests = [d3.json(gde), d3.json(ppp)];
-// console.log(requests)
-
-var womenInScience = "http://stats.oecd.org/SDMX-JSON/data/MSTI_PUB/TH_WRXRS.FRA+DEU+KOR+NLD+PRT+GBR/all?startTime=2007&endTime=2015"
-var consConf = "http://stats.oecd.org/SDMX-JSON/data/HH_DASH/FRA+DEU+KOR+NLD+PRT+GBR.COCONF.A/all?startTime=2007&endTime=2015"
-var requests = [d3.json(womenInScience), d3.json(consConf)];
+var science = "http://stats.oecd.org/SDMX-JSON/data/MSTI_PUB/TH_WRXRS.FRA+DEU+AUS+JPN+GRC+HUN+LUX+POL+TUR+KOR+NLD+ESP+IRL+SVK+PRT+GBR/all?startTime=2007&endTime=2015"
+var conf = "http://stats.oecd.org/SDMX-JSON/data/HH_DASH/FRA+DEU+KOR+NLD+PRT+AUS+JPN+GRC+HUN+POL+LUX+TUR+ESP+SVK+IRL+GBR.COCONF.A/all?startTime=2007&endTime=2015"
+var requests = [d3.json(science), d3.json(conf)];
+console.log(requests);
 
 window.onload = function() {
   // if (requests.status >= 200 && requests.status < 400){
   Promise.all(requests).then(function(response) {
       // response.forEach(function(data){
-        let refined_data = transformResponse(response)
+        var refined_data = transformResponse(response)
         console.log(refined_data)
-        // combine the data into one array
-        year = undefined
-        let draw = main(refined_data, year)
         }).catch(function(e){
             throw(e);
         });
       };
 
-function main(refined_data, year){
-  if ((year == undefined) || (year == "")){
-    data = refined_data
-  } else {
-    data = []
-    for (let i = 0; i < refined_data.length; i++){
-      if (refined_data[i][0] == year){
-        // add data to data thingy
-        data.push(refined_data[i]);
-      }
-    }
-    console.log(data)
-  }};
-
 function setGraph() {
   d3.selectAll("svg").remove();
   var year = document.getElementById('1').value;
   Promise.all(requests).then(function(response) {
-      // response.forEach(function(data){
         var data = transformResponse(response)
-        let draw = main(data, year)
   })
 };
 
@@ -128,9 +97,7 @@ function transformResponse(response){
         return combined;
         };
 
-// use d3 to make the plot
-// define heigth, width, padding
-// var padding = 30;
+// Determine margins
 var margin = {top: 40, right: 120, bottom: 20, left: 30},
         height = 500 - margin.left - margin.right,
         width = 800 - margin.bottom - margin.top;
@@ -140,30 +107,60 @@ var svg = d3.select("body")
             .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
-            // .append("g")
-	 		      //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// // Make list with all gde values
-// var gde_list = []
-// for (var i = 0; i < data.length; i++){
-//   gde_list.push(data[i][1])
-// };
-//
-// // Make list with all ppp values
-// var ppp_list = []
-// for (var i = 0; i < data.length; i++){
-//   ppp_list.push(data[i][2])
-// };
-//
-// var xAxis = d3.scaleLinear()
-//           .range([0, width])
-//           .domain([Math.min(...ppp) -10, Math.max(...ppp)])
-//           .ticks(10);
-//
-// var yAxis = d3.scaleLinear()
-//           .range(height, 0)
-//           .domain([Math.min(...gde) -10, Math.max(...gde)])
-//           .ticks(10);
+
+// Make list with all science values
+var science_list = []
+for (var i = 0; i < refined_data.length; i++){
+  science_list.push(refined_data[i][2])
+};
+
+// Make list with all conf values
+var conf_list = []
+for (var i = 0; i < refined_data.length; i++){
+  conf_list.push(refined_data[i][1])
+};
+
+var xAxis = d3.scaleLinear()
+          .range([0, width])
+          .domain([Math.min(...conf) -10, Math.max(...conf)])
+          .ticks(10);
+
+var yAxis = d3.scaleLinear()
+          .range(height, 0)
+          .domain([Math.min(...science) -10, Math.max(...science)])
+          .ticks(10);
+
+var colour_country = [{"Country": {"France": "#66c2a5"}}, {"Country": {"Germany": "#fc8d62"}}, {"Country": {"KOR": "#8da0cb"}}, {"Country": {"Netherlands": "#e78ac3"}},
+                      {"Country": {"Portugal": "#e78ac3"}}, {"Country": {"Australia": "#a6d854"}}, {"Country" : {"Japan": "#ffd92f"}}, {"Country": {"Greece": "#b2182b"}},
+                      {"Country": {"Hungary": "#ef8a62"}}, {"Country": {"Poland": "#762a83"}}, {"Country": {"Luxembourg": "#4d9221"}}, {"Country": {"Turkey": "#2166ac"}},
+                      {"Country": {"Spain": "#756bb1"}}, {"Country": {"Slovenia": "#d95f0e"}}, {"Country": {"IRL": "#f03b20"}}, {"Country": {"United Kingdom": "#2b8cbe"}}];
+
+// function colours_coun(data){
+//   for (var i = 0; i < refined_data.length; i++){
+//     if(refined_data[i][3] == )
+//   }
+// }
+
+
+var colours = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#e78ac3", "#a6d854", "#ffd92f", "#b2182b", "#ef8a62", "#762a83", "#4d9221", "#2166ac", "#756bb1", "#d95f0e", "#f03b20", "#2b8cbe"];
+var colour_dict = {}
+let colour = 0
+for (var i = 0; i < refined_data.length; i++){
+    if (!colour_dict.includes(refined_data[i][3])){
+      color_dict[refined_data[i][3]] = "colours"
+      colour += 1
+    }
+    svg.append("circle")
+          .attr("cx", function(){
+            return xAxis(data[i][1])
+          });
+          .attr("cy", function(){
+            return yAxis(data[i][2])
+          });
+          .attr("r", 5)
+          .attr("fill", color_dict[colour])
+      };
 
 // Add title above barchart
 svg.append("text")
@@ -172,7 +169,7 @@ svg.append("text")
   .attr("text-anchor", "middle")
   .style("font-size", "14px")
 	.style('fill', 'darkOrange')
-  .text("Scatterplot: Gross Domestic Expenditure on R&D at current PPP$ vs purchasing parity power");
+  .text("Scatterplot: Science Expenditure vs confidence");
 
 // create legend block
 var legend = svg.append("rect")
@@ -185,23 +182,38 @@ var legend = svg.append("rect")
 
 // Determine the axis
 // Determine x as
-// svg.append("g")
-//     .attr("class", "x axis")
-//     .attr("transform", "translate(0," + height + ")")
-//     .call(xAxis)
-//     .append("text")
-//           .attr("class", "x label_x")
-//           .attr("x", width - margin.left)
-//           .attr("y", 50)
-//           .text("parity power");
-//
-// // Determine y as
-// svg.append("g")
-//     .attr("class", "y axis")
-//     .call(yAxis)
-//     .append("text")
-//         .attr("transform", "rotate(-90)")
-//         .attr("y", 6)
-//         .attr("dy", ".6em")
-//         .style("text-anchor", "end")
-//         .text("gde");
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis)
+    .append("text")
+          .attr("class", "x label_x")
+          .attr("x", width - margin.left)
+          .attr("y", 50)
+          .text("confidence");
+
+// Determine y as
+svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis)
+    .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".6em")
+        .style("text-anchor", "end")
+        .text("gde");
+
+// create text box for mouseover event
+var tip = d3.select("body")
+  		.data(data)
+  		.append("div")
+  		.attr("class", "tip")
+  		.text("")
+  		.style("position", "absolute")
+  		.style("display", "none")
+  		.on("mouseover", function(d, i) {
+  		  tip.transition().duration(0);
+  		})
+  		.on("mouseout", function(d, i) {
+    		tip.style("display", "none");
+  		});
