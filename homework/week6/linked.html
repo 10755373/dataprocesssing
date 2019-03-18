@@ -3,10 +3,36 @@
     <head>
         <meta charset="utf-8">
         <style>
-
+        /*  CSS goes here */
         </style>
     </head>
     <body>
-        <script src="//d3js.org/d3.v5.min.js" charset="utf-8"></script>
-        <script src="//d3js.org/topojson.v1.min.js"></script>
-        <link rel="stylesheet" href="map.css">
+        <script type="text/javascript" src="//d3js.org/d3.v5.min.js"></script>
+        <script src="/scripts/topojson.js"></script>
+
+        <script src="//d3js.org/d3.v3.min.js"></script>
+        <script src="/scripts/0.5.0./datamaps.world.hires.js"></script>
+
+        <script src="datamaps.world.hires.js"></script>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+        <script src="/datamaps.world.min.js"></script>
+        <div id="container" style="position: relative; width: 500px; height: 300px;"></div>
+        <script>
+        // Javascript goes here
+            var map = new Datamap({element: document.getElementById('container')});
+        </script> -->
+
+        <!-- <link rel="stylesheet" href="world.css"> -->
+        <!-- <div id="world-map-hr" style="position: relative; height: 350px; width: 500px;"></div>
+        <script>
+          var world = new DatamapHR({
+            scope: 'world',
+            element: document.getElementById('world-map-hr'),
+            projection: 'mercator',
+            geographyConfig: {
+              borderWidth: 0.5
+            }
+          })
+        </script>
