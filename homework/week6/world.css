@@ -1,8 +1,8 @@
-.names {
-fill: none;
-stroke: #fff;
-stroke-linejoin: round;
-}
+  .names {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+  }
 
   /* Tooltip CSS */
   .d3-tip {
