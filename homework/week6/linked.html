@@ -1,28 +1,69 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <style>
-        /*  CSS goes here */
-        </style>
-    </head>
-    <body>
-        <!-- <script type="text/javascript" src="//d3js.org/d3.v5.min.js"></script>
-        <script src="/scripts/topojson.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <title>Linked views</title>
 
-        <script src="/scripts/0.5.0./datamaps.world.hires.js"></script>
-        <script src="datamaps.world.hires.js"></script>
+    <!-- Import D3 V5 -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script>
+      d3v5 = d3;
+      window.d3 = null;
+    </script>
 
-        <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
-        <script src="node_modules/datamaps/dist/datamaps.world.min.js"></script>
-        <script src="/datamaps.world.min.js"></script> -->
+    <!-- Import D3 V3 and TopoJSON -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+    <script src="/datamaps.world.hires.min.js"></script>
+    <link rel="stylesheet" href="world.css"></link>
+    <script type ="text/javascript" src="script.js" meta charset="utf-8"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+    <div id="container" style="position: relative; width: 800px; height: 700px;"></div>
+    <script>
+      d3v3 = d3;
+      window.d3 = null;
 
-        <script type="text/javascript" src="http://d3js.org/d3.v5.min.js"></script>
-        <script src="http://d3js.org/queue.v1.min.js"></script>
-        <script src="http://d3js.org/topojson.v1.min.js"></script>
-        <script type="text/javascript" src="d3-tip.js"></script>
-        <link rel="stylesheet" href="world.css"></link>
-        <script type ="text/javascript" src="script.js" meta charset="utf-8"></script>
-    </body>
+      // Test if it worked
+      console.log('v3', d3v3.version);
+      console.log('v5', d3v5.version);
+    </script>
+    <!-- <script type="text/javascript" src="d3-tip.js"></script> -->
+    <script>
+    var map = new Datamap({
+        element: document.getElementById('container'),
+        fills: {
+            HIGH: '#afafaf',
+            LOW: '#123456',
+            MEDIUM: 'blue',
+            UNKNOWN: 'rgb(0,0,0)',
+            defaultFill: 'green'
+        },
+        data: {
+            IRL: {
+                fillKey: 'LOW',
+                numberOfThings: 2002
+            },
+            USA: {
+                fillKey: 'MEDIUM',
+                numberOfThings: 10381
+            }
+        },
+        geographyConfig: {
+            popupTemplate: function(geo, data) {
+                return ['<div class="hoverinfo"><strong>',
+                        'Number of things in ' + geo.properties.name,
+                        ': ' + data.numberOfThings,
+                        '</strong></div>'].join('');
+            }
+        }
+    });
+    </script>
+    <!-- REST OF IMPORTS HERE -->
+
+  </head>
+  <body>
+
+    <!-- CONTENT OF PAGE HERE -->
+
+  </body>
 </html>
