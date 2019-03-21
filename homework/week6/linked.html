@@ -16,10 +16,15 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
     <script src="/datamaps.world.hires.min.js"></script>
     <link rel="stylesheet" href="world.css"></link>
-    <script type ="text/javascript" src="script.js" meta charset="utf-8"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+    <script type="text/javascript" src="d3-tip.js"></script>
+    <script src="script.js"></script>
     <div id="container" style="position: relative; width: 800px; height: 700px;"></div>
-    <script>
+<!-- <script>
+    var map = new Datamap({element: document.getElementById('world')});
+</script> -->
+    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script> -->
+    <!-- <script>
       d3v3 = d3;
       window.d3 = null;
 
@@ -27,7 +32,7 @@
       console.log('v3', d3v3.version);
       console.log('v5', d3v5.version);
     </script>
-    <!-- <script type="text/javascript" src="d3-tip.js"></script> -->
+    <!-- <div id="container" style="position: relative; width: 500px; height: 300px;"></div> -->
     <script>
     var map = new Datamap({
         element: document.getElementById('container'),
@@ -58,12 +63,13 @@
         }
     });
     </script>
-    <!-- REST OF IMPORTS HERE -->
+
+    <script type ="text/javascript" src="script.js" meta charset="utf-8"></script>
 
   </head>
   <body>
 
-    <!-- CONTENT OF PAGE HERE -->
+
 
   </body>
 </html>

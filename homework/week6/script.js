@@ -1,13 +1,19 @@
-var requests = [d3.json("DP_LIVE_17032019174948957.json")];
+var requests = [d3v5.json("DP_LIVE_17032019174948957.json")];
 
 window.onload = function() {
   Promise.all(requests).then(function(response) {
-  console.log(response)
-  console.log(response[1])
-  console.log(response[1].data)
-  console.log(response[1].data[2])
-  console.log(response[1].data[2][2])
-  let draw = world(response)
+    var req = response
+    console.log(req)
+    console.log(req[0].data)
+    // foreach()
+    // console.log(req["Value"])
+    // console.log(req.columns[0].data)
+    // console.log(alert(req.data[2])
+    // console.log(Object.values(obj))
+    // console.log(response.data[i][2])
+    // console.log(response[1].data[2][2])
+    let draw = world(req)
+    var map = new Datamap({element: document.getElementById('world')});
 
   })
 }
@@ -16,14 +22,14 @@ function world(data) {
 
   var gdp = data
     console.log(gdp)
-    console.log(gdp[1].data)
-    console.log(gdp[1].data[2])
+    // console.log(gdp[1].data)
+    // console.log(gdp[1].data[2])
 
   var margin = {top: 70, right: 100, bottom: 20, left: 50},
         height = 800 - margin.bottom - margin.top,
         width = 1300 - margin.left - margin.right;
 
-  var svg = d3.select("body")
+  var svg = d3v5.select("body")
               .append("svg")
               .attr("id", "map")
               .attr("width", width + margin.left + margin.right)
@@ -41,30 +47,30 @@ function world(data) {
               .attr('class', 'd3-tip')
               .offset([0,0])
               .html(function(d) {
-                for (var i = 0; i < gdp[1].data.length; i++) {
+                for (var i = 0; i < gdp[0].data.length; i++) {
                   if (d.id == gdp[1].data[0]){
-                    return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Population: </strong><span class='details'>" + format(gdp[1].data[2]) +"</span>";
+                    return "<strong>Country: </strong><span class='details'>" + geo.properties.name + "<br></span>" + "<strong>Population: </strong><span class='details'>" + format(gdp[0].data[2]) +"</span>";
                   }
                 }
               });
 
-  var projection = d3.geoMercator()
+  var projection = d3v5.geoMercator()
                       .scale(100)
                       .translate([width / 2, height / 1.5]);
 
-  var path = d3.geoPath().projection(projection);
+  var path = d3v5.geoPath().projection(projection);
 
   var gdp_countries = [];
-  for (let i = 0; i < gdp[1].data.length; i++){
-    gdp_countries.push(gdp[1].data[2][2]);
+  for (let i = 0; i < gdp[0].data.length; i++){
+    gdp_countries.push(gdp[0].data[2]);
   }
   console.log(gdp_countries)
 
-  var xScale = d3.scaleLinear()
+  var xScale = d3v5.scaleLinear()
             .domain([Math.min(... gdp_countries) - 5, Math.max(... gdp_countries)])
             .range([20, width]);
 
-  var colorscale = d3.scaleThreshold()
+  var colorscale = d3v5.scaleThreshold()
               .domain([Math.min(... gdp_countries) - 5, Math.max(... gdp_countries)])
               .range([0, 280]);
 
@@ -95,14 +101,14 @@ function world(data) {
           .on('mouseover',function(d){
             tip.show(d);
 
-            d3.select(this)
+            d3v5.select(this)
               .style("opacity", 1)
               .style("stroke","white")
               .style("stroke-width",3);
           })
           .on('mouseout', function(d){
             tip.hide(d);
-            d3.select(this)
+            d3v5.select(this)
               .style("opacity", 0.8)
               .style("stroke","white")
               .style("stroke-width", 0.3);
