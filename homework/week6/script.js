@@ -84,30 +84,16 @@ for (let i = 0; i < data_2016.length; i++){
 }
 console.log(countries_2016)
 
-
-
-
   var tip = d3.tip()
               .attr('class', 'd3-tip')
               .offset([0,0])
-              .html(function(geo, data){
-                return
-              })
               .html(function(d) {
-                for (var i = 0; i < gdp[0].data.length; i++) {
-                  if (d.id == gdp[1].data[0]){
-                    return "<strong>Country: </strong><span class='details'>" + geo.properties.name + "<br></span>" + "<strong>Population: </strong><span class='details'>" + format(gdp[0].data[2]) +"</span>";
+                for (var i = 0; i < data_2016.length; i++) {
+                  if (geo.properties.id == data_2016[i][0]){
+                    return "<strong>Country: </strong><span class='details'>" + geo.properties.name + "<br></span>" + "<strong>Population: </strong><span class='details'>" + data_2016[i][2] +"</span>";
                   }
                 }
               });
-              // geographyConfig: {
-              //     popupTemplate: function(geo, data) {
-              //         return ['<div class="hoverinfo"><strong>',
-              //                 'Number of things in ' + geo.properties.name,
-              //                 ': ' + data.numberOfThings,
-              //                 '</strong></div>'].join('');
-              //     }
-              // }
 
   var projection = d3v5.geoMercator()
                       .scale(100)
@@ -172,7 +158,6 @@ console.log(countries_2016)
 };
 
 function transformresponse(data) {
-  console.log(data[0].data)
     var data_list = []
     for (let i = 0; i < data[0].data.length; i++){
         data_list.push(data[0].data[i])
@@ -182,7 +167,6 @@ function transformresponse(data) {
 
 function id_value(data) {
   var dict = {}
-  console.log(data[0].data)
   for (let i = 0; i < data[0].data.length; i++) {
     dict[data[0].data[i][0]] = data[0].data[i][2]
   }
