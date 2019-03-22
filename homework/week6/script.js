@@ -1,10 +1,19 @@
-var requests = [d3v5.json("DP_LIVE_17032019174948957.json")];
+var requests = [d3v5.json("DP_LIVE_GDP.json")];
 
 window.onload = function() {
   Promise.all(requests).then(function(response) {
     var req = response
     console.log(req)
-    console.log(req[0].data)
+    // console.log(req[0].data)
+    // req0 = req[0].data
+    // console.log(req0)
+    // req0_dict = {}
+    // req0.forEach(function(element) {
+    //   req0_dict.push(req[0].data[2][2])
+    // console.log(element);
+    // });
+    // console.log(req[0].data[2][2])
+
     // foreach()
     // console.log(req["Value"])
     // console.log(req.columns[0].data)
@@ -13,17 +22,43 @@ window.onload = function() {
     // console.log(response.data[i][2])
     // console.log(response[1].data[2][2])
     let draw = world(req)
-    var map = new Datamap({element: document.getElementById('world')});
-
-  })
-}
+  //   var map = new Datamap({
+  //       element: document.getElementById('map'),
+  //       fills: {
+  //           HIGH: '#afafaf',
+  //           LOW: '#123456',
+  //           MEDIUM: 'blue',
+  //           UNKNOWN: 'rgb(0,0,0)',
+  //           defaultFill: 'green'
+  //       },
+  //       data: {
+  //           IRL: {
+  //               fillKey: 'LOW',
+  //               numberOfThings: 2002
+  //           },
+  //           USA: {
+  //               fillKey: 'MEDIUM',
+  //               numberOfThings: 10381
+  //           }
+  //       },
+  //       geographyConfig: {
+  //           popupTemplate: function(geo, data) {
+  //               return ['<div class="hoverinfo"><strong>',
+  //                       'Number of things in ' + geo.properties.name,
+  //                       ': ' + data.numberOfThings,
+  //                       '</strong></div>'].join('');
+  //           }
+  //       }
+  //   });
+  // })
+})};
 
 function world(data) {
-
-  var gdp = data
-    console.log(gdp)
-    // console.log(gdp[1].data)
-    // console.log(gdp[1].data[2])
+  console.log(data)
+  var data_2016 = transformresponse(data)
+    console.log(data_2016)
+  var dict_2016 = id_value(data)
+  console.log(dict_2016)
 
   var margin = {top: 70, right: 100, bottom: 20, left: 50},
         height = 800 - margin.bottom - margin.top,
@@ -43,9 +78,21 @@ function world(data) {
                .attr("x", width + margin.left)
                .attr("y", 0);
 
+var countries_2016 = []
+for (let i = 0; i < data_2016.length; i++){
+  countries_2016.push(data_2016[i][2]);
+}
+console.log(countries_2016)
+
+
+
+
   var tip = d3.tip()
               .attr('class', 'd3-tip')
               .offset([0,0])
+              .html(function(geo, data){
+                return
+              })
               .html(function(d) {
                 for (var i = 0; i < gdp[0].data.length; i++) {
                   if (d.id == gdp[1].data[0]){
@@ -53,6 +100,14 @@ function world(data) {
                   }
                 }
               });
+              // geographyConfig: {
+              //     popupTemplate: function(geo, data) {
+              //         return ['<div class="hoverinfo"><strong>',
+              //                 'Number of things in ' + geo.properties.name,
+              //                 ': ' + data.numberOfThings,
+              //                 '</strong></div>'].join('');
+              //     }
+              // }
 
   var projection = d3v5.geoMercator()
                       .scale(100)
@@ -60,18 +115,12 @@ function world(data) {
 
   var path = d3v5.geoPath().projection(projection);
 
-  var gdp_countries = [];
-  for (let i = 0; i < gdp[0].data.length; i++){
-    gdp_countries.push(gdp[0].data[2]);
-  }
-  console.log(gdp_countries)
-
   var xScale = d3v5.scaleLinear()
-            .domain([Math.min(... gdp_countries) - 5, Math.max(... gdp_countries)])
+            .domain([Math.min(... countries_2016) - 5, Math.max(... countries_2016)])
             .range([20, width]);
 
   var colorscale = d3v5.scaleThreshold()
-              .domain([Math.min(... gdp_countries) - 5, Math.max(... gdp_countries)])
+              .domain([Math.min(... countries_2016) - 5, Math.max(... countries_2016)])
               .range([0, 280]);
 
   svg.append("text")
@@ -85,7 +134,7 @@ function world(data) {
   svg.append("g")
         .attr("class", "countries")
       .selectAll("path")
-        .data(features.properties.name)
+        // .data(features.properties.name)
       .enter().append("path")
         .attr("d", path)
         .style('stroke', 'white')
@@ -121,6 +170,26 @@ function world(data) {
 
 
 };
+
+function transformresponse(data) {
+  console.log(data[0].data)
+    var data_list = []
+    for (let i = 0; i < data[0].data.length; i++){
+        data_list.push(data[0].data[i])
+      }
+    return data_list;
+  };
+
+function id_value(data) {
+  var dict = {}
+  console.log(data[0].data)
+  for (let i = 0; i < data[0].data.length; i++) {
+    dict[data[0].data[i][0]] = data[0].data[i][2]
+  }
+  return dict
+};
+
+
 //
 // function graph(data) {
 //
@@ -165,16 +234,5 @@ function world(data) {
 //         d.date = parseDate(d.date);
 //       });
 //
-
-// };
-
-// function transformresponse(data) {
-//     var data_list = []
-//     for (let i = 0; i < data[1].data.length; i++){
-//       // if (data[i][2] == "Value"){
-//         data_list.push(data[1].data)
-//       // }
-//     }
-//     return data_list;
-//     console.log(data_list)
+//
 // };
