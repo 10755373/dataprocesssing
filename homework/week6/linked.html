@@ -15,11 +15,10 @@
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
     <script src="/datamaps.world.hires.min.js"></script>
-    <link rel="stylesheet" href="world.css"></link>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
     <script type="text/javascript" src="d3-tip.js"></script>
-    <script src="script.js"></script>
-    <div id="container" style="position: relative; width: 800px; height: 700px;"></div>
+    <link rel="stylesheet" href="world.css"></link>
+    <!-- <div id="map" style="position: relative; width: 800px; height: 700px;"></div> -->
 <!-- <script>
     var map = new Datamap({element: document.getElementById('world')});
 </script> -->
@@ -34,42 +33,40 @@
     </script>
     <!-- <div id="container" style="position: relative; width: 500px; height: 300px;"></div> -->
     <script>
-    var map = new Datamap({
-        element: document.getElementById('container'),
-        fills: {
-            HIGH: '#afafaf',
-            LOW: '#123456',
-            MEDIUM: 'blue',
-            UNKNOWN: 'rgb(0,0,0)',
-            defaultFill: 'green'
-        },
-        data: {
-            IRL: {
-                fillKey: 'LOW',
-                numberOfThings: 2002
-            },
-            USA: {
-                fillKey: 'MEDIUM',
-                numberOfThings: 10381
-            }
-        },
-        geographyConfig: {
-            popupTemplate: function(geo, data) {
-                return ['<div class="hoverinfo"><strong>',
-                        'Number of things in ' + geo.properties.name,
-                        ': ' + data.numberOfThings,
-                        '</strong></div>'].join('');
-            }
-        }
-    });
+    // var map = new Datamap({
+    //     element: document.getElementById('container'),
+    //     fills: {
+    //         HIGH: '#afafaf',
+    //         LOW: '#123456',
+    //         MEDIUM: 'blue',
+    //         UNKNOWN: 'rgb(0,0,0)',
+    //         defaultFill: 'green'
+    //     },
+    //     data: {
+    //         IRL: {
+    //             fillKey: 'LOW',
+    //             numberOfThings: 2002
+    //         },
+    //         USA: {
+    //             fillKey: 'MEDIUM',
+    //             numberOfThings: 10381
+    //         }
+    //     },
+    //     geographyConfig: {
+    //         popupTemplate: function(geo, data) {
+    //             return ['<div class="hoverinfo"><strong>',
+    //                     'Number of things in ' + geo.properties.name,
+    //                     ': ' + data.numberOfThings,
+    //                     '</strong></div>'].join('');
+    //         }
+    //     }
+    // });
     </script>
 
-    <script type ="text/javascript" src="script.js" meta charset="utf-8"></script>
 
   </head>
   <body>
-
-
+    <script type ="text/javascript" src="script.js" meta charset="utf-8"></script>
 
   </body>
 </html>
