@@ -4,24 +4,6 @@ window.onload = function() {
   Promise.all(requests).then(function(response) {
     var req = response
     console.log(req)
-    // console.log(req[0].data)
-    // req0 = req[0].data
-    // console.log(req0)
-    // req0_dict = {}
-    // req0.forEach(function(element) {
-    //   req0_dict.push(req[0].data[2][2])
-    // console.log(element);
-    // });
-    // console.log(req[0].data[2][2])
-
-    // foreach()
-    // console.log(req["Value"])
-    // console.log(req.columns[0].data)
-    // console.log(alert(req.data[2])
-    // console.log(Object.values(obj))
-    // console.log(response.data[i][2])
-    // console.log(response[1].data[2][2])
-
     let draw = world(req)
 
 })};
@@ -32,8 +14,6 @@ function world(data) {
 
   var data_cleaned = transformresponse(data)
     console.log(data_cleaned)
-  // var dict_2016 = id_value(data)
-  // console.log(dict_2016)
 
   var margin = {top: 70, right: 100, bottom: 20, left: 50},
         height = 900 - margin.bottom - margin.top,
@@ -76,18 +56,6 @@ for (let i = 0; i < data_cleaned.length; i++){
     saved_dict[data_cleaned[i][0]] = data_cleaned[i][2]
   }
 };
-// var dict2_2016 = {}
-// var temp_dict = {}
-// for (let i = 0; i < data_cleaned.length; i++){
-//   if (data_cleaned[i][1] == "2016") {
-//     temp_dict["Year"] = 2016
-//     temp_dict["fillKey"] = data_cleaned[i][2]
-//   }
-//   dict_2016["data_cleaned[i][0]""] = data_cleaned[i][2]
-// };
-// console.log(dict_2016)
-
-// "#afafaf", "#123456", "blue", "rgb(0,0,0)"
 
 var dict_2016 = {}
 for (let i = 0; i < data_cleaned.length; i++){
@@ -108,34 +76,16 @@ for (var key in dict_2016) {
   country_color["fillKey"] = colorScale(dict_2016[key])
   dict_2016[key] = country_color;
 }
-//
-// var colors_2016 = {}
-// for (let i = 0; i < data_cleaned.length; i++){
-//   if (data_cleaned[i][1] == "2016") {
-//     let col_dict = {}
-//     let color = "rgb(0 "+ colorscale(data_cleaned[i][2]) +", 0)"
-//     col_dict["fillKey"] = color
-//     colors_2016["data_cleaned[i][0]"] = col_dict;
-//   }
-// };
 
 console.log(dict_2016);
-
-// for (let i = 0; i < data_cleaned.length; i++) {
-//   if (data_cleaned[i][1] == "2016") {
-//     var colorscaled = {}
-//     colorscaled["fillKey"] = "rgb(0 "+ colorscale(data_cleaned[i][2]) +", 0)";
-//   }
-//   country_color["data_cleaned[i][0]"] = "colorscaled";
-// }
 
 console.log(saved_dict);
 
 var map = new Datamap({
     element: document.getElementById('container'),
-    // responsive: true,
+    responsive: true,
     fills: {
-        // defaultFill: "#ABDDA4",
+        defaultFill: '#f0a0fa',
         Leeg: '#e6f0ff',
         Laag: '#b3d1ff',
         Semi: '#80b3ff',
@@ -152,8 +102,26 @@ var map = new Datamap({
                     ': ' + data.Value,
                     '</strong></div>'].join('');
         }
-    }
-    // d3v5.select(window).on('click', function() {
+    },
+    // done: function(datamap) {
+    // datamap.div.selectAll('.datamaps-subunit').on('click', function (geography) {
+    //     // var state_id = geography.id;
+    //     // var fillkey_obj = datamap.options.data[state_id] || {fillColor: '#FF1493'};
+    //     // var fillkey = fillkey_obj.fillColor;;
+    //     // var fillkeys = Object.keys(fills);
+    //     // var antikey = fillkeys[Math.abs(fillkeys.indexOf(fillkey) - 1)];
+    //     // var new_fills = {
+    //     //   [geography.id] : {
+    //     //     fillColor: antikey
+    //     //   }
+    //     // }
+    //     // datamap.updateChoropleth(new_fills)
+    //     linegraph(geography.id);
+    //   });
+      // }
+    // setProjection: function linegraph(country, data) {
+    // var projection = d3.geo.equirectangular()}
+    // d3v5.select("body").on('click', function() {
     //     linegraph(country, data);
     // })
 
@@ -163,6 +131,10 @@ var map = new Datamap({
     // data: ,
   });
 
+  // Make an empty graph underneath the world map
+  graph();
+
+  // Make a legend
   map.legend();
 
   //
@@ -224,16 +196,18 @@ var map = new Datamap({
   //
   // svg.call(tip);
 
-  let draw = graph(data);
 };
 
-function graph(data) {
+function graph() {
+
+  d3v5.json("DP_LIVE_GDP.json").then(function(data){
+
+  var graph_data = data.data
 
   var margin = {top: 20, right: 80, bottom: 30, left: 50},
-        width = 900 - margin.left - margin.right,
-        height = 700 - margin.top - margin.bottom;
+        width = 800 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
-  // create svg canvas
   var svg = d3v5.select("body")
             .append("svg")
             .attr("id", "lineplot")
@@ -242,10 +216,15 @@ function graph(data) {
 
   var parseYear = d3v5.timeParse("%Y")
   var years = []
-  for (let i = 1960; i < 2017; i++) {
-      // u = parseTime(i)
-      years.push(i);
+  for (let i = 1960; i < 2016; i++) {
+      j = parseYear(i)
+      years.push(j);
       }
+
+  var gdps = []
+  for (let i = 0; i < graph_data.length; i++) {
+      gdps.push(graph_data[i][2]);
+  }
 
   var xScale = d3v5.scaleTime()
                   .range([0, width])
@@ -253,15 +232,15 @@ function graph(data) {
 
   var yScale = d3v5.scaleLinear()
                 .range([height, 0])
-                .domain(0, 5000000000);
+                .domain([Math.min(... gdps), Math.max(... gdps)]);
 
   var xAxis = d3v5.axisBottom()
-              .ticks(10)
-              .scale(xScale);
+              .scale(xScale)
+              .ticks(10);
 
   var yAxis = d3v5.axisLeft()
-              .ticks(10)
-              .scale(yScale);
+              .scale(yScale)
+              .ticks(10);
 
   svg.append("g")
      .attr("class", "yAxis")
@@ -276,63 +255,76 @@ function graph(data) {
      .style("font-size", "10px");
 
   svg.append("text")
-      .attr("transform", "translate(" + (width/2) + " ," +
-                         (height + margin.top) + ")")
+      .attr("transform", "translate(" + (width / 2) + " ," +
+                         (height + margin.top + margin.bottom) + ")")
       .style("text-anchor", "middle")
       .text("Year")
       .style("font-size", "15px");
 
   svg.append("text")
      .attr("transform", "rotate(-90)")
-     .attr("x", - height/2)
+     .attr("x", - height / 2)
      .attr("y", margin.left / 2)
      .style("text-anchor", "middle")
      .text("Average GDP per capita")
      .style("font-size", "15px");
 
-};
+ // var temp_line = d3v5.line()
+ //   .x(function(d) { return xScale(d3v5.timeParse(d.Year));
+ //   })
+ //   .y(function(d) { return yScale(d["GDP"]);
+ //   })
+ //
+ // svg.append("path")
+ //     .data([gdps])
+ //     .attr("class", "line")
+ //     .attr("d", temp_line)
+ //     .attr("fill", "white")
+ //     .style("stroke", "orange")
+ //     .style("stroke-width", 4)
+ //     .attr("transform", "translate(" + margin.left + ", 0)");
+ //   })
+}
+)};
 
-function linegraph(country, data) {
+function linegraph(country) {
 
-  var data_cleaned = transformresponse(data)
+  d3v5.json("DP_LIVE_GDP.json").then(function(data){
 
-  var margin = {top: 20, right: 80, bottom: 30, left: 50},
-        width = 900 - margin.left - margin.right,
-        height = 700 - margin.top - margin.bottom;
+  var overall_data = data.data
 
-  var svg = d3.select("body")
-            .append("svg")
-            .attr("id", "lineplot")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom);
+  // var svg = d3.select("body")
+  //           .append("svg")
+  //           .attr("id", "lineplot")
+  //           .attr("width", width + margin.left + margin.right)
+  //           .attr("height", height + margin.top + margin.bottom);
 
   var country_data = []
-  for (let i = 0; i < data_cleaned.length; i++) {
-    if (data_cleaned[i][0] == country) {
-      country_data.push({"Year": data_cleaned[i][1], "GDP": data_cleaned[i][2]});
+  for (let i = 0; i < overall_data.length; i++) {
+    if (overall_data[i][0] == country) {
+      country_data.push(overall_data[i][2]});
     }
   }
 
   var parseYear = d3v5.timeParse("%Y")
   var years = []
-  for (let i = 0; i < country_data.length; i++) {
-      country_data[i][0]
-      u = parseTime(i)
-      years.push(u);
+  for (let i = 0; i < overall_data.length; i++) {
+      j = parseTime(i)
+      years.push(j);
       }
 
-  var data_cleaned = []
-  for (i = 0; i < data_cleaned.length; i++) {
-    data_cleaned.push(data_cleaned[i][2]);
-    }
+  // var data_cleaned = []
+  // for (i = 0; i < data_cleaned.length; i++) {
+  //   data_cleaned.push(data_cleaned[i][2]);
+  //   }
 
   var xScale = d3v5.scaleTime()
                   .range([0, width])
-                  .domain([Math.min(... parseYear), Math.max(... parseYear)]);
+                  .domain([Math.min(... years), Math.max(... years)]);
 
   var yScale = d3v5.scaleLinear()
                 .range([height, 0])
-                .domain([Math.min(... data_cleaned), Math.max(... data_cleaned)]);
+                .domain([Math.min(... country_data), Math.max(... country_data)]);
 
   var xAxis = d3v5.axisBottom()
               .ticks(10)
@@ -342,45 +334,43 @@ function linegraph(country, data) {
               .ticks(10)
               .scale(yScale);
 
-  svg.append("g")
-     .attr("class", "yAxis")
-     .attr("transform", "translate(" + margin.left + ",0)")
-     .call(yAxis)
-     .style("font-size", "10px");
+  // svg.append("g")
+  //    .attr("class", "yAxis")
+  //    .attr("transform", "translate(" + margin.left + ",0)")
+  //    .call(yAxis)
+  //    .style("font-size", "10px");
+  //
+  // svg.append("g")
+  //    .attr("class", "xAxis")
+  //    .attr("transform", "translate(" + margin.left + "," + h + ")")
+  //    .call(xAxis)
+  //    .style("font-size", "10px");
+  //
+  // svg.append("text")
+  //     .attr("transform", "translate(" + (width / 2) + " ," +
+  //                        (height + margin.top) + ")")
+  //     .style("text-anchor", "middle")
+  //     .text("Year")
+  //     .style("font-size", "15px");
+  //
+  // svg.append("text")
+  //    .attr("transform", "rotate(-90)")
+  //    .attr("x", - height / 2)
+  //    .attr("y", margin.left / 2)
+  //    .style("text-anchor", "middle")
+  //    .text("Average GDP per capita")
+  //    .style("font-size", "15px");
 
-  svg.append("g")
-     .attr("class", "xAxis")
-     .attr("transform", "translate(" + margin.left + "," + h + ")")
-     .call(xAxis)
-     .style("font-size", "10px");
-
-  svg.append("text")
-      .attr("transform", "translate(" + (width/2) + " ," +
-                         (height + margin.top) + ")")
-      .style("text-anchor", "middle")
-      .text("Year")
-      .style("font-size", "15px");
-
-  svg.append("text")
-     .attr("transform", "rotate(-90)")
-     .attr("x", - height/2)
-     .attr("y", margin.left / 2)
-     .style("text-anchor", "middle")
-     .text("Average GDP per capita")
-     .style("font-size", "15px");
-
-   var line = d3.svg.line()
+   var line = d3v5.svg.line()
      .interpolate("basis")
-     .x(function(d) {
-       return xScale(parseTime(d.Year));
+     .x(function(d) { return xScale(parseTime(d.Year));
      })
-     .y(function(d) {
-       return yScale(d["GDP"]);
+     .y(function(d) { return yScale(d["GDP"]);
      })
 
     var bisectDate = d3.bisector(function(d) { return d; }).left;
-
-}
+  });
+  }
 
 function transformresponse(data) {
     var data_list = []
