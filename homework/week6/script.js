@@ -44,6 +44,7 @@ function world(data) {
   //              .attr("x", width + margin.left)
   //              .attr("y", 0);
 
+// Get values from 2016
 var values_2016 = []
 for (let i = 0; i < data_cleaned.length; i++){
   if (data_cleaned[i][1] == "2016") {
@@ -52,6 +53,7 @@ for (let i = 0; i < data_cleaned.length; i++){
 };
 console.log(values_2016)
 
+// Make dictionary with country as key and gdp (2016) as value
 var saved_dict = {}
 for (let i = 0; i < data_cleaned.length; i++){
   if (data_cleaned[i][1] == "2016") {
@@ -59,6 +61,7 @@ for (let i = 0; i < data_cleaned.length; i++){
   }
 };
 
+// Determine colorscale for every country
 var dict_2016 = {}
 for (let i = 0; i < data_cleaned.length; i++){
   if (data_cleaned[i][1] == "2016") {
@@ -70,7 +73,7 @@ console.log(dict_2016)
 // Determine colorscale
 var colorScale = d3v5.scaleOrdinal()
             .domain([Math.min(... values_2016), Math.max(... values_2016)])
-            .range(['Laag','Medium','Redelijk','Hoog','Uitzonderlijk']);
+            .range(['Laag','Medium','Hoog','Uitzonderlijk']);
 
 // Adjust previously made dict
 for (var key in dict_2016) {
@@ -90,14 +93,15 @@ var map = new Datamap({
     responsive: true,
     fills: {
         defaultFill: '#f0a0fa',
-        Laag: '#e6f2ff',
-        Semi: '#99ccff',
-        Redelijk: '#3399ff',
-        Hoog: '#0059b3',
-        Uitzonderlijk: '#00264d'
+        Ontbrekend: '#f0a0fa',
+        Laag: '#ccffcc',
+        Semi: '#96c985',
+        Hoog: '#61943d',
+        Uitzonderlijk: '#336600'
     },
     data: dict_2016,
     scope: 'world',
+    responsive: true,
     geographyConfig: {
         popupTemplate: function(geo, data) {
             return ['<div class="hoverinfo"><strong>',
@@ -108,9 +112,10 @@ var map = new Datamap({
     },
     done: function(datamap) {
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-        state_name = geography.properties.name
-        setlinegraph(state_name);
+        setlinegraph(geography.properties.iso);
+        // console.log(geography.properties.iso);
       })}
+
     // done: function(datamap) {
     //   datamap.div.selectAll('.datamaps-subunit').on('click', function (geography) {
     //     state_name = geography.properties.name
@@ -154,17 +159,17 @@ var map = new Datamap({
 
 };
 
-function setgraph() {
+function setgraph(country) {
 
   // Load data
-  d3v5.json("DP_LIVE_GDP.json").then(function(data){
+  d3v5.json("DP_LIVE_GDP.json").then(function(response){
 
   // Retrieve the right data from loaded data
-  var graph_data = data.data
+  var graph_data = response.data
 
   // Determine margins
   var margin = {top: 20, right: 80, bottom: 30, left: 200},
-        width = 1000 - margin.left - margin.right,
+        width = 1300 - margin.left - margin.right,
         height = 700 - margin.top - margin.bottom;
 
   // Make a svg
@@ -176,9 +181,9 @@ function setgraph() {
 
   // Make title
   svg.append("text")
-     .attr("x", width)
+     .attr("x", width / 1.5)
      .attr("class", "title")
-     .attr("y", margin.top / 1.3)
+     .attr("y", margin.top / 1.2)
      .style("text-anchor", "middle")
      .style("font-size", "16px")
      .text("When clicked on a country you'll see the GDP per capita from 1960 to 2016");
@@ -188,11 +193,13 @@ function setgraph() {
   // var parseTime = d3.timeParse("%Y")
   var parseTime = d3v5.timeParse("%Y");
   var years = []
-  for (let i = 1960; i < 2016; i++) {
+  for (let i = 1970; i < 2016; i++) {
       j = parseTime(i)
       years.push(j);
       }
+      console.log(years)
 
+  // Get all gdp's
   var gdps = []
   for (let i = 0; i < graph_data.length; i++) {
       gdps.push(graph_data[i][2]);
@@ -201,7 +208,7 @@ function setgraph() {
   // Determine xScale
   var xScale = d3v5.scaleTime()
                   .range([0, width])
-                  .domain([Math.min(... years), Math.max(... years)]);
+                  .domain([parseTime(1970), parseTime(2016)]);
 
   // Determine yScale
   var yScale = d3v5.scaleLinear()
@@ -247,20 +254,29 @@ function setgraph() {
      .attr("y", margin.left / 2)
      .style("text-anchor", "middle")
      .text("Average GDP per capita")
-     .style("font-size", "15px");M
+     .style("font-size", "15px");
+
+     // Get data from country throughout the year
+   var gdp_country = []
+   for (let i = 0; i < graph_data.length; i++) {
+     if (graph_data[i][0] == country){
+       gdp_country.push({"Year" : graph_data[i][1], "GDP" : graph_data[i][2]});
+     }
+   }
+
   // make temporary line
  var temp_line = d3v5.line()
-   .x(function(d) { return xScale(parseTime(d.Year));
+   .x(function(d) { return xScale(d.Year);
    })
    .y(function(d) { return yScale(d["GDP"]);
    })
 
   // Determine path for temporary line
  svg.append("path")
-     .data([gdps])
+     .data([gdp_country])
      .attr("class", "line")
      .attr("d", temp_line)
-     .attr("fill", "black")
+     .attr("fill", "white")
      .style("stroke", "orange")
      .style("stroke-width", 4)
      .attr("transform", "translate(" + margin.left + ", 0)");
@@ -269,34 +285,40 @@ function setgraph() {
 )};
 
 function setlinegraph(country) {
+console.log(country)
 
-  d3v5.json("DP_LIVE_GDP.json").then(function(data){
+  // Load data
+  d3v5.json("DP_LIVE_GDP.json").then(function(response){
 
-  var overall_data = data.data
+  var overall_data = response.data
+  console.log(overall_data)
 
   var margin = {top: 20, right: 80, bottom: 30, left: 200},
-        width = 1000 - margin.left - margin.right,
+        width = 1300 - margin.left - margin.right,
         height = 700 - margin.top - margin.bottom;
 
-  var svg = d3.select("body")
-            .append("svg")
-            .attr("id", "lineplot")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom);
+  // var svg = d3.select("body")
+  //           .append("svg")
+  //           .attr("id", "lineplot")
+  //           .attr("width", width + margin.left + margin.right)
+  //           .attr("height", height + margin.top + margin.bottom);
 
+  // Get data from country
   var country_data = []
   for (let i = 0; i < overall_data.length; i++) {
     if (overall_data[i][0] == country) {
       country_data.push(overall_data[i][2]);
     }}
+console.log(country_data)
 
-
+  // Get time and parse it in the right format
   var parseTime = d3v5.timeParse("%Y")
   var years = []
   for (let i = 0; i < overall_data.length; i++) {
       j = parseTime(i)
       years.push(j);
       }
+ console.log(years)
 
   // var data_cleaned = []
   // for (i = 0; i < data_cleaned.length; i++) {
@@ -306,37 +328,88 @@ function setlinegraph(country) {
   // Make xScale
   var xScale = d3v5.scaleTime()
                   .range([0, width])
-                  .domain([Math.min(... years), Math.max(... years)]);
+                  .domain([parseTime(1970), parseTime(2016)]);
 
   // Make yScale
   var yScale = d3v5.scaleLinear()
                 .range([height, 0])
                 .domain([Math.min(... country_data), Math.max(... country_data)]);
+  //
+  // // Make xAxis
+  // var xAxis = d3v5.axisBottom()
+  //             .ticks(10)
+  //             .scale(xScale);
+  //
+  // // Make yAxis
+  // var yAxis = d3v5.axisLeft()
+  //             .ticks(10)
+  //             .scale(yScale);
 
-  // Make xAxis
-  var xAxis = d3v5.axisBottom()
-              .ticks(10)
-              .scale(xScale);
+  // Get data from country throughout the year
+// var parseTime = d3v5.timeParse("%Y")
+var gdp_country = []
+for (let i = 0; i < overall_data.length; i++) {
+  if (overall_data[i][0] == country){
+    gdp_country.push({"Year" : overall_data[i][1], "GDP" : overall_data[i][2]});
+  }
+}
+console.log(gdp_country)
+console.log(gdp_country["Year"])
 
-  // Make yAxis
-  var yAxis = d3v5.axisLeft()
-              .ticks(10)
-              .scale(yScale);
+var parseTime = d3v5.timeParse("%Y")
+var years_country = []
+for (let i = 0; i < gdp_country.length; i++) {
+  j = parseTime(i)
+  years_country.push(j);
+}
+// console.log(years_country)
+// console.log(years_country["Year"])
 
   // Determine points
    var country_line = d3v5.line()
-     .x(function(d) { return xScale(parseTime(d.Year));
+     .x(function(d) {
+       console.log(d)
+       console.log(parseTime(d.Year))
+       return xScale(parseTime(d.Year))
+       ;
      })
-     .y(function(d) { return yScale(d["GDP"]);
-     })
+     .y(function(d) {
+       console.log(d)
+       return yScale(d["GDP"])
+     console.log(d["GDP"]);
+   });
 
-   var svg = d3.selectAll("#lineplot");
+  //  var svg_y = d3.selectAll("yAxis")
+  //      svg_y.transition()
+  //           .duration(750)
+  //           .attr("newyAxis", yScale)
+  //
+  // var svg_x = d3.selectAll("xAxis")
+  //      svg_x.transition()
+  //           .duration(750)
+  //           .attr("newyAxis", xScale)
+      //
+      // // Make yaxis
+      // svg.append("g")
+      //    .attr("class", "yAxis")
+      //    .attr("transform", "translate(" + margin.left + ",0)")
+      //    .call(yAxis)
+      //    .style("font-size", "10px");
+      //
+      // // Make xaxis
+      // svg.append("g")
+      //    .attr("class", "xAxis")
+      //    .attr("transform", "translate(" + margin.left + "," + height + ")")
+      //    .call(xAxis)
+      //    .style("font-size", "10px");
+
+   var svg = d3v5.selectAll("#lineplot");
 
    // Make the changes to the line
    svg.select(".line")
       .transition()
       .duration(750)
-      .attr("d", country_line(country_data));
+      .attr("d", country_line(gdp_country));
 
   // Make sure data fits
   var bisectDate = d3.bisector(function(d) { return d; }).left;
@@ -353,7 +426,7 @@ function setlinegraph(country) {
   //   var lines = document.getElementsByClassName('line');
   //
   //   var mousePerLine = mouseG.selectAll('.mouse-per-line')
-  //     .data(cities)
+  //     .data(gdp_country)
   //     .enter()
   //     .append("g")
   //     .attr("class", "mouse-per-line");
