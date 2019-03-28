@@ -10,6 +10,13 @@
       d3v5 = d3;
       window.d3 = null;
     </script>
+    <h1>Total GDP of several countries in the world</h1>
+    <p>Gemaakt door Rinus van Grunsven - 10755373</p>
+    <p>Hieronder ziet u een wereldkaart met daarin de GDP's per land betreffende het jaar 2016</p>
+    <p>De legenda (linksboven) toont of een land over data beschikte danwel in welke mate de hoogte van het totale GDP was in het jaar 2016</p>
+    <p>Met de muis kunt u over de landen schuiven waarbij een pop-up verschijnt waarin het betreffende land en ht GDP verschijnt</p>
+    <p>Zie de link voor de gebruikte gegevens: <a href="DP_LIVE_GDP.csv" target="_blank">DP_LIVE_GDP.csv</a></p>
+    <p>De data is middels "convertCSV2JSON.py" omgezet naar een json bestand zodat dit het werken in javascript ten goede komt</p>
 
     <!-- Import D3 V3 and TopoJSON -->
     <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -18,55 +25,16 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
     <script type="text/javascript" src="d3-tip.js"></script>
     <link rel="stylesheet" href="world.css"></link>
-    <!-- <div id="map" style="position: relative; width: 800px; height: 700px;"></div> -->
-<!-- <script>
-    var map = new Datamap({element: document.getElementById('world')});
-</script> -->
-    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script> -->
-    <!-- <script>
-      d3v3 = d3;
-      window.d3 = null;
-
-      // Test if it worked
-      console.log('v3', d3v3.version);
-      console.log('v5', d3v5.version);
-    </script>
-    <!-- <div id="container" style="position: relative; width: 500px; height: 300px;"></div> -->
-    <script>
-    // var map = new Datamap({
-    //     element: document.getElementById('container'),
-    //     fills: {
-    //         HIGH: '#afafaf',
-    //         LOW: '#123456',
-    //         MEDIUM: 'blue',
-    //         UNKNOWN: 'rgb(0,0,0)',
-    //         defaultFill: 'green'
-    //     },
-    //     data: {
-    //         IRL: {
-    //             fillKey: 'LOW',
-    //             numberOfThings: 2002
-    //         },
-    //         USA: {
-    //             fillKey: 'MEDIUM',
-    //             numberOfThings: 10381
-    //         }
-    //     },
-    //     geographyConfig: {
-    //         popupTemplate: function(geo, data) {
-    //             return ['<div class="hoverinfo"><strong>',
-    //                     'Number of things in ' + geo.properties.name,
-    //                     ': ' + data.numberOfThings,
-    //                     '</strong></div>'].join('');
-    //         }
-    //     }
-    // });
-    </script>
-
+    <script type="text/javascript" src="script.js"></script>
 
   </head>
   <body>
-    <script type ="text/javascript" src="script.js" meta charset="utf-8"></script>
+    <div id="container" style="position: relative; width: 900px; height: 10px;"></div>
+    <div id="clicked-country"></div>
+    <p>Hieronder ziet u een line graph</p>
+    <p>De x- en yschaal slagen er om de een of andere reden niet in het domein aan te passen aan de specifieke data van landen waardoor deze een ietwat raar beeld kunnen geven</p>
+    <p>Daarnaast lukte het niet om de functie 'getTotalLength()' werkende te krijgen waardoor de mouseover-hover-functie bij de lijngrafiek geen data weergeeft, excuses hiervoor</p>
+    <p>Zie de link voor de gebruikte gegevens: <a href="DP_LIVE_GDP.csv" target="_blank">DP_LIVE_GDP.csv</a></p>
 
   </body>
 </html>
